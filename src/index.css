@@ -1,19 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-navy: #0F172A;
+  --color-fiery-orange: #8B5CF6; /* Primary: Amethyst Violet */
+  --color-electric-blue: #D8B4FE; /* Secondary: Soft Lavender */
+  --color-royal-indigo: #6366F1; /* Tertiary: Indigo */
+  --color-vibrant-cyan: #22D3EE; /* Accent: Cyber Cyan */
+  --color-surface: #020617; /* Background: Deep Space */
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
-    @apply bg-white text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-white;
+    @apply bg-surface text-slate-400 font-sans antialiased selection:bg-fiery-orange/30 selection:text-white;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-white tracking-tight;
   }
 }
 
-/* Ensure dark mode works with the .dark class in Tailwind v4 */
+/* Custom Variant for Dark Mode */
 @custom-variant dark (&:where(.dark, .dark *));

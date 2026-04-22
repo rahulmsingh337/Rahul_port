@@ -1,115 +1,186 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Download, ChevronRight, Linkedin, Mail, Phone } from 'lucide-react';
-import { resumeData } from '../data/resumeData';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, MotionValue } from 'motion/react';
+import { Linkedin, Mail, Phone, Download, MapPin, Globe } from 'lucide-react';
+import { contentData } from '../data/ContentData';
 
-const Hero: React.FC = () => {
+const HeroSectionContent: React.FC<{
+  section: any;
+  index: number;
+  scrollYProgress: MotionValue<number>;
+}> = ({ section, index, scrollYProgress }) => {
+  const start = index * 0.33;
+  const end = (index + 1) * 0.33;
+
+  const opacity = useTransform(
+    scrollYProgress,
+    [start, start + 0.05, end - 0.05, end],
+    [0, 1, 1, 0]
+  );
+
+  const y = useTransform(scrollYProgress, [start, end], [60, -60]);
+
+  const subtextColor = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    ["#8B5CF6", "#D8B4FE", "#22D3EE"]
+  );
+
   return (
-    <section id="home" className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-28 pb-12 scroll-mt-20">
-      <div className="mx-auto flex max-w-7xl flex-grow flex-col items-center justify-center text-center">
+    <motion.div
+      style={{ opacity, y }}
+      className="absolute flex flex-col items-center text-center max-w-5xl"
+    >
+      {index === 0 && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-4 inline-block rounded-full border border-blue-500/20 bg-blue-500/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-blue-500"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="relative mb-12 h-56 w-56 overflow-hidden rounded-[2.5rem] border border-white/10 shadow-[0_0_50px_rgba(139,92,246,0.15)] md:h-72 md:w-72"
         >
-          Available for Opportunities
+          <motion.img
+            src="/profile.jpg"
+            alt="Rahul Singh"
+            className="h-full w-full object-cover grayscale brightness-90 hover:grayscale-0 hover:scale-105 transition-all duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-surface/90 via-transparent to-transparent" />
+
+          {/* Decorative corner */}
+          <motion.div
+            animate={{ opacity: [0.2, 0.5, 0.2] }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="absolute top-4 right-4 h-2 w-2 rounded-full bg-vibrant-cyan shadow-[0_0_10px_rgba(34,211,238,0.8)]"
+          />
         </motion.div>
+      )}
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-6 text-5xl font-bold tracking-tighter text-slate-900 dark:text-white md:text-8xl"
-        >
-          {resumeData.basics.name}
-        </motion.h1>
+      <motion.h1 className="font-display text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl leading-[1.1]">
+        {section.text.split('. ').map((part: string, i: number) => (
+          <span key={i} className="block mt-2">
+            {part}
+          </span>
+        ))}
+      </motion.h1>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-8 text-xl font-medium text-blue-500 md:text-3xl"
-        >
-          {resumeData.basics.title}
-        </motion.h2>
+      <motion.p
+        style={{ color: subtextColor }}
+        className="mt-10 font-mono text-sm uppercase tracking-[0.4em] md:text-xl font-medium"
+      >
+        {section.subtextText}
+      </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mx-auto mb-10 max-w-2xl text-lg text-slate-600 dark:text-slate-400"
-        >
-          {resumeData.basics.summary}
-        </motion.p>
-
+      {index === 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex flex-wrap items-center justify-center gap-4"
+          transition={{ delay: 1.2 }}
+          className="mt-12 flex flex-col items-center gap-8"
         >
-          <a
-            href="#experience"
-            className="group flex items-center gap-2 rounded-full bg-blue-500 px-8 py-4 font-bold text-white transition-all hover:bg-blue-600 hover:shadow-[0_0_20px_rgba(59,130,246,0.4)]"
-          >
-            View Experience
-            <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
-          </a>
-          <a
+          <div className="flex items-center gap-10">
+            <motion.a
+              href="https://www.linkedin.com/in/rahul-singh-sap-abap/"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -5, color: "var(--color-royal-indigo)" }}
+              whileTap={{ scale: 0.9 }}
+              className="text-slate-500 transition-colors"
+            >
+              <Linkedin size={22} />
+            </motion.a>
+            <motion.a
+              href="https://github.com/rahulmsingh337/"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -5, color: "var(--color-royal-indigo)" }}
+              whileTap={{ scale: 0.9 }}
+              className="text-slate-500 transition-colors"
+            >
+              <Globe size={22} />
+            </motion.a>
+            <motion.a
+              href="mailto:rs58598@gmail.com"
+              whileHover={{ y: -5, color: "var(--color-royal-indigo)" }}
+              whileTap={{ scale: 0.9 }}
+              className="text-slate-500 transition-colors"
+            >
+              <Mail size={22} />
+            </motion.a>
+            <motion.a
+              href="https://wa.me/918989805836"
+              whileHover={{ y: -5, color: "var(--color-royal-indigo)" }}
+              whileTap={{ scale: 0.9 }}
+              className="text-slate-500 transition-colors"
+            >
+              <Phone size={22} />
+            </motion.a>
+          </div>
+
+          <div className="flex items-center gap-3 rounded-full bg-white/5 border border-white/5 px-4 py-2 text-slate-500 font-mono text-[10px] uppercase tracking-widest">
+            <MapPin size={12} className="text-royal-indigo" />
+            <span>Noida, Uttar Pradesh, India</span>
+          </div>
+        </motion.div>
+      )}
+    </motion.div>
+  );
+};
+
+export const Hero: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  return (
+    <section ref={containerRef} className="relative h-[300vh] w-full">
+      <div className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden px-6">
+        {contentData.heroSections.map((section, index) => (
+          <HeroSectionContent
+            key={section.id}
+            section={section}
+            index={index}
+            scrollYProgress={scrollYProgress}
+          />
+        ))}
+
+        {/* Action Button - Floating at bottom */}
+        <motion.div 
+          className="absolute bottom-16 z-20"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.5 }}
+        >
+          {/* Subtle Continuous Pulsing Glow */}
+          <motion.div
+            animate={{ 
+              opacity: [0.2, 0.5, 0.2],
+              scale: [0.95, 1.05, 0.95],
+            }}
+            transition={{ 
+              duration: 4, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+            className="absolute inset-0 z-0 bg-navy blur-2xl rounded-full"
+          />
+
+          <motion.a
             href="/resume.pdf"
             download="Rahul_Singh_Resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-full bg-slate-900 px-8 py-4 font-bold text-white shadow-lg transition-all hover:bg-black hover:shadow-black/20 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100 dark:hover:shadow-white/10"
+            whileHover={{ 
+              scale: 1.05, 
+              backgroundColor: "var(--color-navy)",
+              borderColor: "rgba(139, 92, 246, 0.5)",
+              boxShadow: "0 0 40px rgba(15, 23, 42, 0.8)" 
+            }}
+            whileTap={{ scale: 0.95 }}
+            className="group relative z-10 flex items-center gap-4 rounded-full border border-white/10 bg-white/5 px-10 py-5 backdrop-blur-xl transition-all"
           >
-            <Download size={18} />
-            Download Resume
-          </a>
+            <Download className="text-white group-hover:animate-bounce" size={18} />
+            <span className="font-display text-sm font-bold tracking-widest text-white uppercase">Obtain Resume</span>
+          </motion.a>
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="mt-16 flex items-center justify-center gap-8 text-slate-400"
-        >
-          <a href={resumeData.basics.links[0].url} target="_blank" className="transition-colors hover:text-blue-500">
-            <Linkedin size={20} />
-          </a>
-          <a href={`mailto:${resumeData.basics.email}`} className="transition-colors hover:text-blue-500">
-            <Mail size={20} />
-          </a>
-          <a href={`tel:${resumeData.basics.phone}`} className="transition-colors hover:text-blue-500">
-            <Phone size={20} />
-          </a>
-        </motion.div>
-      </div>
-
-      {/* Impact Strip - Moved into normal flow to prevent overlap */}
-      <div className="mt-16 w-full max-w-7xl">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {[
-            { label: "Experience", value: "4+ Years" },
-            { label: "Projects Delivered", value: "10+" },
-            { label: "Awards Won", value: "20+" }
-          ].map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1 + i * 0.1 }}
-              className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md dark:bg-slate-900/20"
-            >
-              <span className="text-sm font-medium uppercase tracking-widest text-slate-400">{stat.label}</span>
-              <span className="text-2xl font-bold text-blue-500">{stat.value}</span>
-            </motion.div>
-          ))}
-        </div>
       </div>
     </section>
   );
 };
-
-
-export default Hero;

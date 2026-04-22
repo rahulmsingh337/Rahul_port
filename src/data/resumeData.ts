@@ -1,135 +1,71 @@
 export const resumeData = {
   basics: {
     name: "Rahul Singh",
-    title: "SAP ABAP Consultant",
-    summary: "Experienced professional in S/4 HANA implementation and conversion with in-depth knowledge of ABAP on HANA development. Expertise in Web dynpro, CDS views, AMDP, and code push-down techniques. Well-versed in HANA architecture, deployment options, and in-memory concepts. Meticulous team player with expertise in analytic and calculation views.",
-    location: "Noida, Uttar Pradesh",
+    title: "SAP ABAP Lead | S/4HANA Migration & HANA Remediation",
+    summary: "Results-driven SAP ABAP Lead with 5+ years of hands-on experience across Accenture and Infosys, specializing in S/4HANA migration, HANA remediation, and enterprise SAP modernization. Certified SAP Back-End Developer (ABAP Cloud) with a strong track record of delivering complex SAP solutions for global enterprise clients.",
+    location: "Noida, Uttar Pradesh, India",
     email: "rs58598@gmail.com",
-    phone: "+918989805836",
-    dob: "1999/04/20",
+    phone: "+91-8989805836",
     links: [
-      { label: "LinkedIn", url: "https://www.linkedin.com/in/rahul-singh-a7793916b/" }
+      { label: "LinkedIn", url: "https://www.linkedin.com/in/rahul-singh-sap-abap/" },
+      { label: "Portfolio", url: "https://rahulsingh3.netlify.app" },
+      { label: "GitHub", url: "https://github.com/rahulmsingh337/" }
     ]
   },
   experience: [
     {
-      company: "Accenture Limited",
-      role: "Software Developer Lead",
-      dates: "2025/12 – Present",
-      location: "Noida",
+      company: "Accenture",
+      role: "Software Development Lead",
+      dates: "Dec 2025 – Present",
+      location: "Noida, UP",
       bullets: [
-        "Used ABAP Runtime analysis, SQL Trace, and System Dump Analysis to improve performance of existing ABAP programs.",
-        "Usage of correct BAPIs for migration data to master tables.",
-        "Worked on latest coding techniques for SAP ABAP 7.5.",
-        "Created various Utilities in different functional modules which are Infosys and SAP certified.",
-        "Integration of SAP with various external APIs."
-      ],
-      metrics: ["SAP ABAP 7.5", "SQL Trace", "BAPI Migration"]
+        "Leading SAP ABAP development and ECC to S/4HANA migration initiatives for enterprise clients.",
+        "Performing HANA remediation on custom ABAP programs to ensure S/4HANA compatibility.",
+        "Developing and optimizing CDS Views, OData Services, and RAP-based applications.",
+        "Working with SmartShift team to develop automation tools for enhancing business activities.",
+        "Conducting code reviews and maintaining quality standards across the development lifecycle."
+      ]
     },
     {
-      company: "INFOSYS Private Limited",
-      role: "SAP ABAP Consultant",
-      dates: "2021/05 – 2025/12",
-      location: "Noida",
+      company: "Infosys Private Limited",
+      role: "SAP ABAP Consultant / Infosys Certified SAP Fiori Consultant",
+      dates: "May 2021 – Dec 2025",
+      location: "Bengaluru, Karnataka",
       bullets: [
-        "Excellent contributor to project teams with strong communication and problem-solving skills.",
-        "Interacted with clients to understand requirements and supported functional teams with technical specifications.",
-        "Responsibilities included coding, testing, deployment, quality management, and documentation.",
-        "Experience in Report programming - Classical, Interactive, and ALV.",
-        "Experience in interface programming including Proxies, RFC functional Call, Idocs, and web dynpro.",
-        "Experience in designing layout and programming in Smart forms and Adobe forms.",
-        "Worked on Data Dictionary concepts."
-      ],
-      metrics: ["ALV Reports", "RFC/Idocs", "Smart Forms"]
+        "Contributed as a top performer in EAS SAP Unit across multiple application management projects.",
+        "Developed Reports (Classical, Interactive, ALV) and interface programs including Proxies, RFC, IDocs.",
+        "Designed and programmed Smart Forms, Adobe Forms, and SAPscript layouts.",
+        "Applied latest ABAP 7.5 coding techniques including inline declarations and ABAP SQL enhancements.",
+        "Acted as AMS Track Lead (Aug 2022 – Dec 2025), managing project delivery and resolving complex technical issues."
+      ]
     }
   ],
-  projects: [
+  education: [
     {
-      title: "AMS Track Lead",
-      dates: "2022/08 – 2025/12",
-      stack: ["SAP ABAP", "Debugging"],
-      bullets: [
-        "Helped team in complex technical issues and provided KT for advanced debugging skills.",
-        "Submitted POC for new projects and joined design discussions for feasibility checks.",
-        "Managed to deliver all projects/enhancements without any major escalation.",
-        "Joined critical calls with user/business for P1/P2 issues."
-      ]
+      degree: "Bachelor of Technology – Mechanical Engineering",
+      institution: "Vellore Institute of Technology",
+      dates: "2016 – 2020",
+      location: "Vellore, Tamil Nadu"
     },
     {
-      title: "Creation of New Output type",
-      dates: "2024/02 – 2024/05",
-      stack: ["Email Automation", "BOL"],
-      bullets: [
-        "Led assessment and enhancement of US email automation for BOL and packing slip outputs.",
-        "Implemented changes to consolidate multiple PO's/DN's into a single document."
-      ]
-    },
-    {
-      title: "LT03 Enhancement and Implementation",
-      dates: "2023/11 – 2024/01",
-      stack: ["SAP Transaction", "POC"],
-      bullets: [
-        "Led solution development for LT03 transaction code challenges, creating customized T-codes.",
-        "Conducted thorough analysis, proposed solutions, and executed Proof of Concept.",
-        "Successfully implemented solution, receiving client appreciation for efficacy."
-      ]
-    },
-    {
-      title: "COPA report Reconciliation",
-      dates: "2023/09 – 2023/12",
-      stack: ["FI", "COPA"],
-      bullets: [
-        "Developed report to fetch frozen index and user from background jobs.",
-        "Calculated FI, COPA, and Statistical values based on selection screen dates."
-      ]
-    },
-    {
-      title: "Traceability report",
-      dates: "2024/08 – 2025/04",
-      stack: ["Business Process", "Reporting"],
-      bullets: [
-        "Developed report to gather summary data of order/delivery information to simplify business processes."
-      ]
-    },
-    {
-      title: "Smartshift project",
-      dates: "2025/12 – Present",
-      stack: ["Automation", "Smart Shift"],
-      bullets: [
-        "Working with Smart shift team to develop automation tools to enhance business activities."
-      ]
+      degree: "Intermediate (12th)",
+      institution: "DAV Public School",
+      dates: "2014 – 2016",
+      location: "Dudhi Kuha"
     }
   ],
   skills: [
-    { name: "SAP ABAP", level: 4 },
-    { name: "SAP HANA", level: 3 },
-    { name: "SAP UI5", level: 4 },
-    { name: "SAP FICO", level: 4 },
-    { name: "BRF Plus", level: 3 },
-    { name: "ALE IDocs", level: 4 },
-    { name: "ALV / SALV", level: 5 },
-    { name: "SAP Fiori", level: 3 }
-  ],
-  education: [
-    { degree: "Bachelor of Technology", institution: "Vellore Institute of Technology", location: "Vellore", dates: "2016 – 2020" },
-    { degree: "Intermediate", institution: "DAV PUBLIC SCHOOL", institutionLocation: "DUDHICUHA", dates: "2014 – 2016" },
-    { degree: "Matriculation", institution: "DAV PUBLIC SCHOOL", institutionLocation: "CWS JAYANT", dates: "2002 – 2014" }
+    { name: "SAP ABAP 7.5", category: "Core ABAP" },
+    { name: "CDS Views", category: "Modern SAP" },
+    { name: "RAP", category: "Modern SAP" },
+    { name: "OData Services", category: "Modern SAP" },
+    { name: "S/4HANA Migration", category: "S/4HANA" },
+    { name: "HANA Remediation", category: "S/4HANA" }
   ],
   awards: [
-    { title: "UNIT RISE Award", org: "INFOSYS PRIVATE LIMITED", desc: "Received 5 Unit Rise Awards for outstanding work and delivery of exceptional results." },
-    { title: "Best performer IN EASSAP", org: "INFOSYS PRIVATE LIMITED", desc: "Received for exceptional performance in the EASSAP UNIT." },
-    { title: "INSTA REWARDS", org: "INFOSYS PRIVATE LIMITED", desc: "Received 16 consecutive Insta Rewards for consistently demonstrating commitment." },
-    { title: "Ace COE performer", org: "INFOSYS PRIVATE LIMITED", desc: "Received for exceptional performance in the EASSAP UNIT." }
-  ],
-  extra: {
-    interests: ["Cricket", "Drawing", "Dance", "Watching movies", "Coding", "Travelling"],
-    languages: ["English", "Hindi", "Bhojpuri"],
-    organizations: [
-      { name: "LEO Club", role: "PUBLICITY HEAD", location: "Vellore, Tamil Nadu", desc: "Encouraging youths to develop leadership qualities through social service." }
-    ],
-    volunteering: [
-      { name: "LEO education", org: "DON BOSCO school", role: "Founder", desc: "Collaborates with Don Bosco School to teach students in slum areas." }
-    ],
-    certifications: ["EDUREKA (Infosys)"]
-  }
+    { title: "Unit Rise Award – Rookie of the Quarter", org: "Infosys (EAS SAP Unit)" },
+    { title: "Best Performer in EAS SAP Unit", org: "Infosys" },
+    { title: "ACE COE Performer Award", org: "Infosys EAS SAP Unit" },
+    { title: "16 Consecutive INSTA Rewards", org: "Infosys" }
+  ]
 };

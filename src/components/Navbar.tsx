@@ -1,150 +1,126 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Menu, X, ArrowUpRight, Cpu } from 'lucide-react';
 
-const Navbar: React.FC = () => {
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme');
-      return saved !== 'light';
-    }
-    return true;
-  });
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+export const Navbar: React.FC = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
-    
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isDark]);
-
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    localStorage.setItem('theme', newTheme ? 'dark' : 'light');
-  };
+  }, []);
 
   const navLinks = [
-    { name: 'Experience', href: '#experience' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Achievements', href: '#achievements' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Arsenal', href: '#skills' },
+    { name: 'Journey', href: '#experience' },
+    { name: 'Impact', href: '#projects' },
   ];
 
   return (
-    <nav
-      className={`fixed top-0 left-0 z-40 w-full transition-all duration-300 ${
-        scrolled ? 'bg-white/80 py-3 backdrop-blur-lg dark:bg-slate-950/80' : 'bg-transparent py-6'
-      }`}
-    >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
-        <motion.a
-          href="#"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="text-2xl font-bold tracking-tighter text-slate-900 dark:text-white"
+    <>
+      <div className="fixed top-0 left-0 z-50 w-full pointer-events-none">
+        <motion.nav 
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className={`pointer-events-auto flex items-center justify-between gap-8 px-12 py-5 transition-all duration-500 backdrop-blur-xl ${
+            isScrolled ? 'bg-surface/90 border-b border-white/5 shadow-2xl' : 'bg-transparent'
+          }`}
         >
-          RS<span className="text-blue-500">.</span>
-        </motion.a>
+          <a href="#" className="flex items-center gap-4 group">
+            <div className="relative">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-royal-indigo to-vibrant-cyan flex items-center justify-center font-bold text-white shadow-[0_0_20px_rgba(139,92,246,0.3)] group-hover:rotate-12 group-hover:scale-110 transition-all duration-500">
+                <Cpu size={20} />
+              </div>
+              <motion.div 
+                animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute inset-0 rounded-xl bg-royal-indigo/30 -z-10"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="hidden sm:block font-display text-sm font-extrabold uppercase tracking-tighter text-white group-hover:text-vibrant-cyan transition-colors">Rahul Singh</span>
+              <span className="hidden sm:block font-mono text-[8px] uppercase tracking-[0.2em] text-slate-500">SAP Lead</span>
+            </div>
+          </a>
 
-        {/* Desktop Nav */}
-        <div className="hidden items-center space-x-8 md:flex">
-          {navLinks.map((link, i) => (
+          <div className="hidden items-center gap-8 md:flex">
+            {navLinks.map((link) => (
+              <motion.a
+                key={link.name}
+                href={link.href}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative font-mono text-[10px] uppercase tracking-[0.2em] text-slate-400 transition-colors hover:text-white group/nav"
+              >
+                {link.name}
+                <motion.div 
+                  className="absolute -bottom-1 left-0 h-px w-0 bg-vibrant-cyan group-hover/nav:w-full transition-all duration-300"
+                />
+              </motion.a>
+            ))}
+            <div className="h-4 w-px bg-white/10" />
             <motion.a
-              key={link.name}
-              href={link.href}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="text-sm font-medium text-slate-600 transition-colors hover:text-blue-500 dark:text-slate-400 dark:hover:text-blue-400"
+              href="mailto:rs58598@gmail.com"
+              whileHover={{ 
+                scale: 1.05, 
+                backgroundColor: "var(--color-royal-indigo)", 
+                color: "#fff",
+                boxShadow: "0 0 25px rgba(139, 92, 246, 0.4)" 
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 rounded-full border border-royal-indigo/30 bg-royal-indigo/10 px-5 py-2 font-mono text-[10px] uppercase tracking-widest text-white transition-all"
             >
-              {link.name}
+              Contact <ArrowUpRight size={12} />
             </motion.a>
-          ))}
-          
-          {/* Theme Toggle Switch */}
-          <button
-            onClick={toggleTheme}
-            className="relative flex h-8 w-14 items-center rounded-full bg-slate-200 p-1 transition-colors dark:bg-slate-800"
-            aria-label="Toggle Theme"
-          >
-            <motion.div
-              animate={{ x: isDark ? 24 : 0 }}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              className="flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-sm dark:bg-slate-900"
-            >
-              {isDark ? (
-                <Moon size={12} className="text-blue-400" />
-              ) : (
-                <Sun size={12} className="text-amber-500" />
-              )}
-            </motion.div>
-          </button>
-        </div>
+          </div>
 
-        {/* Mobile Nav Toggle */}
-        <div className="flex items-center space-x-4 md:hidden">
-          <button
-            onClick={toggleTheme}
-            className="relative flex h-7 w-12 items-center rounded-full bg-slate-200 p-1 transition-colors dark:bg-slate-800"
+          <button 
+            className="md:hidden text-white p-1"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            <motion.div
-              animate={{ x: isDark ? 20 : 0 }}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              className="flex h-5 w-5 items-center justify-center rounded-full bg-white shadow-sm dark:bg-slate-900"
-            >
-              {isDark ? (
-                <Moon size={10} className="text-blue-400" />
-              ) : (
-                <Sun size={10} className="text-amber-500" />
-              )}
-            </motion.div>
+            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="text-slate-900 dark:text-white"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
+        </motion.nav>
       </div>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
-        {isOpen && (
+        {isMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden bg-white dark:bg-slate-950 md:hidden"
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-surface/95 backdrop-blur-2xl"
           >
-            <div className="flex flex-col space-y-4 px-6 py-8">
+            <div className="flex flex-col items-center gap-10 text-center">
               {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="text-lg font-medium text-slate-900 dark:text-white"
+                <a 
+                  key={link.name} 
+                  href={link.href} 
+                  className="font-display text-4xl font-bold text-white hover:text-royal-indigo transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}
                 </a>
               ))}
+              <a 
+                href="mailto:rs58598@gmail.com" 
+                className="mt-6 text-2xl font-mono uppercase tracking-widest text-vibrant-cyan"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Collaborate
+              </a>
             </div>
+            <button 
+              onClick={() => setIsMenuOpen(false)}
+              className="absolute top-10 right-10 text-white p-4"
+            >
+              <X size={32} />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 };
-
-export default Navbar;

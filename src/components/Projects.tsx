@@ -1,127 +1,127 @@
-import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Filter, ArrowUpDown, Code } from 'lucide-react';
-import { resumeData } from '../data/resumeData';
+import React from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ExternalLink, Database, Zap, Share2, Terminal } from 'lucide-react';
+import { contentData } from '../data/ContentData';
 
-const Projects: React.FC = () => {
-  const [filter, setFilter] = useState('All');
-  const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'title'>('newest');
-
-  const allTech = useMemo(() => {
-    const techs = new Set<string>();
-    resumeData.projects.forEach(p => p.stack.forEach(s => techs.add(s)));
-    return ['All', ...Array.from(techs)];
-  }, []);
-
-  const filteredAndSortedProjects = useMemo(() => {
-    let result = [...resumeData.projects];
-    
-    if (filter !== 'All') {
-      result = result.filter(p => p.stack.includes(filter));
-    }
-
-    result.sort((a, b) => {
-      if (sortBy === 'title') return a.title.localeCompare(b.title);
-      const dateA = new Date(a.dates.split(' – ')[0]).getTime();
-      const dateB = new Date(b.dates.split(' – ')[0]).getTime();
-      return sortBy === 'newest' ? dateB - dateA : dateA - dateB;
-    });
-
-    return result;
-  }, [filter, sortBy]);
+export const Projects: React.FC = () => {
+  const [feedbackGiven, setFeedbackGiven] = React.useState<Record<string, boolean>>({});
 
   return (
-    <section id="projects" className="py-24 px-6 bg-slate-50/50 dark:bg-slate-950/50 scroll-mt-20">
+    <section id="projects" className="relative py-32 px-6">
       <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 flex flex-col items-center justify-between gap-8 md:flex-row"
+          className="mb-24"
         >
-          <div className="text-center md:text-left">
-            <h2 className="mb-4 text-4xl font-bold tracking-tighter text-slate-900 dark:text-white md:text-5xl">
-              Technical <span className="text-blue-500">Projects</span>
-            </h2>
-            <p className="text-slate-600 dark:text-slate-400">Showcasing my technical implementations and problem-solving.</p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2 rounded-2xl bg-white p-1.5 shadow-sm dark:bg-slate-900">
-              <Filter size={16} className="ml-2 text-slate-400" />
-              <select
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="bg-transparent px-2 py-1 text-sm font-medium outline-none dark:text-white"
-              >
-                {allTech.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-
-            <div className="flex items-center gap-2 rounded-2xl bg-white p-1.5 shadow-sm dark:bg-slate-900">
-              <ArrowUpDown size={16} className="ml-2 text-slate-400" />
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-transparent px-2 py-1 text-sm font-medium outline-none dark:text-white"
-              >
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-                <option value="title">Title A-Z</option>
-              </select>
-            </div>
-          </div>
+          <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-royal-indigo">Core Initiatives</h2>
+          <h3 className="mt-4 text-5xl font-bold text-white md:text-6xl tracking-tighter">Impact & Innovation</h3>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <AnimatePresence mode="popLayout">
-            {filteredAndSortedProjects.map((project, index) => (
-              <motion.div
-                key={project.title}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                className="group flex flex-col rounded-3xl border border-slate-200 bg-white p-8 transition-all hover:border-blue-500/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] dark:border-slate-800 dark:bg-slate-900"
-              >
-                <div className="mb-6 flex items-center justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-500">
-                    <Code size={20} />
+        <div className="grid gap-12 md:grid-cols-2">
+          {contentData.projects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1, duration: 0.8 }}
+              whileHover={{ 
+                scale: 1.01,
+                borderColor: "rgba(139, 92, 246, 0.4)"
+              }}
+              className="group relative flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#0F172A]/40 p-12 transition-all duration-500 backdrop-blur-sm"
+            >
+              <div>
+                <div className="flex justify-between items-start mb-10">
+                  <div className="p-5 rounded-2xl bg-surface/50 border border-white/10 text-royal-indigo group-hover:scale-110 group-hover:bg-royal-indigo/10 transition-all">
+                    {index % 2 === 0 ? <Database size={28} /> : <Terminal size={28} />}
                   </div>
-                  <span className="text-xs font-bold text-slate-400">{project.dates}</span>
+                  <div className="flex gap-4">
+                    <motion.div whileHover={{ scale: 1.2, color: "#fff" }} className="text-slate-600 transition-colors cursor-pointer">
+                      <Share2 size={20} />
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.2, color: "#fff" }} className="text-slate-600 transition-colors cursor-pointer">
+                      <ExternalLink size={20} />
+                    </motion.div>
+                  </div>
                 </div>
-                
-                <h3 className="mb-3 text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-500 transition-colors">
+
+                <h4 className="text-3xl font-bold text-white mb-6 group-hover:text-vibrant-cyan transition-colors leading-tight">
                   {project.title}
-                </h3>
-                
-                <div className="mb-6 flex flex-wrap gap-2">
-                  {project.stack.map(tech => (
-                    <span key={tech} className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:bg-slate-800 dark:text-slate-400">
-                      {tech}
+                </h4>
+                <p className="text-slate-400 text-lg leading-relaxed mb-10">
+                  {project.description}
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  {project.tags.map(tag => (
+                    <span key={tag} className="rounded-full bg-white/5 border border-white/5 px-5 py-2 font-mono text-[10px] uppercase tracking-widest text-slate-300 transition-all hover:bg-white/10">
+                      {tag}
                     </span>
                   ))}
                 </div>
 
-                <ul className="mb-8 flex-grow space-y-2">
-                  {project.bullets.map((bullet, i) => (
-                    <li key={i} className="text-sm text-slate-600 dark:text-slate-400">
-                      • {bullet}
-                    </li>
-                  ))}
-                </ul>
+                {/* Feedback Mechanism */}
+                <div className="mt-10 pt-8 border-t border-white/5 flex items-center justify-between">
+                  <AnimatePresence mode="wait">
+                    {feedbackGiven[project.id] ? (
+                      <motion.span
+                        key="thanks"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="font-sans text-[10px] uppercase tracking-widest text-vibrant-cyan font-bold"
+                      >
+                        Thanks for your feedback!
+                      </motion.span>
+                    ) : (
+                      <motion.div 
+                        key="rating"
+                        initial={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="flex items-center justify-between w-full"
+                      >
+                        <span className="font-sans text-[10px] uppercase tracking-widest text-slate-500">Was this helpful?</span>
+                        <div className="flex gap-4">
+                          {[1, 2, 3, 4, 5].map((rating) => (
+                            <motion.button
+                              key={rating}
+                              whileHover={{ scale: 1.2, color: "var(--color-vibrant-cyan)" }}
+                              whileTap={{ scale: 0.9 }}
+                              className="text-slate-600 hover:text-white transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setFeedbackGiven(prev => ({ ...prev, [project.id]: true }));
+                              }}
+                            >
+                              <Zap size={14} className={rating <= 3 ? "opacity-30" : "opacity-100"} />
+                            </motion.button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
 
-                <button className="flex items-center gap-2 text-sm font-bold text-blue-500 transition-colors hover:text-blue-600">
-                  View Details <ExternalLink size={14} />
-                </button>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+              {project.metrics && (
+                <div className="mt-12 pt-8 border-t border-white/5">
+                  <div className="flex items-center gap-3">
+                    <div className="h-2 w-2 rounded-full bg-vibrant-cyan shadow-[0_0_10px_rgba(34,211,238,1)]" />
+                    <span className="font-mono text-xs font-bold text-white uppercase tracking-widest">
+                      Outcome: {project.metrics}
+                    </span>
+                  </div>
+                </div>
+              )}
+              
+              {/* Corner accent */}
+              <div className="absolute top-0 right-0 h-24 w-24 translate-x-12 -translate-y-12 rounded-full bg-royal-indigo/5 blur-2xl group-hover:bg-royal-indigo/20 transition-all" />
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
   );
 };
-
-export default Projects;
