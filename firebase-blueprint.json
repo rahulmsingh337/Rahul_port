@@ -1,0 +1,22 @@
+{
+  "entities": {
+    "Message": {
+      "title": "Chat Message",
+      "description": "Individual message in a chat conversation",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "enum": ["user", "bot"] },
+        "text": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "userEmail": { "type": "string" }
+      },
+      "required": ["role", "text", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/chat_history/{messageId}": {
+      "schema": "Message",
+      "description": "Stores individual chat messages"
+    }
+  }
+}

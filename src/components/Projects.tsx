@@ -1,10 +1,76 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ExternalLink, Database, Zap, Share2, Terminal } from 'lucide-react';
+import { ExternalLink, Database, Zap, Share2, Terminal, Cpu, BarChart3, Mail, MessageSquareText, Layers, Layout, Shield, Tag, X } from 'lucide-react';
 import { contentData } from '../data/ContentData';
+
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  tags: string[];
+  metrics?: string;
+  fullDescription?: string; // Adding fullDescription to project data if present
+}
+
+const getTagIcon = (tag: string) => {
+  const iconProps = { size: 12, className: "mr-1.5" };
+  const normalizedTag = tag.toLowerCase();
+  
+  if (normalizedTag.includes('sap') || normalizedTag.includes('abap')) return <Cpu {...iconProps} />;
+  if (normalizedTag.includes('automation')) return <Zap {...iconProps} />;
+  if (normalizedTag.includes('data')) return <Database {...iconProps} />;
+  if (normalizedTag.includes('frontend')) return <Layout {...iconProps} />;
+  if (normalizedTag.includes('cloud')) return <Layers {...iconProps} />;
+  if (normalizedTag.includes('process')) return <Terminal {...iconProps} />;
+  return <Tag {...iconProps} />;
+};
 
 export const Projects: React.FC = () => {
   const [feedbackGiven, setFeedbackGiven] = React.useState<Record<string, boolean>>({});
+  const [selectedProject, setSelectedProject] = useState<typeof contentData.projects[0] | null>(null);
+
+  const ProjectModal = ({ project }: { project: typeof contentData.projects[0] }) => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
+      onClick={() => setSelectedProject(null)}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="relative w-full max-w-2xl bg-[#0F172A] border border-white/10 rounded-[2.5rem] p-10 overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button 
+          onClick={() => setSelectedProject(null)}
+          className="absolute top-6 right-6 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white transition-all"
+        >
+          <X size={20} />
+        </button>
+        <h3 className="text-4xl font-bold text-white mb-6">{project.title}</h3>
+        <p className="text-slate-400 text-lg leading-relaxed mb-8">{project.description}</p>
+        
+        <h4 className="text-white font-bold mb-4">Technologies Used:</h4>
+        <div className="flex flex-wrap gap-3 mb-8">
+          {project.tags.map(tag => (
+            <span key={tag} className="flex items-center rounded-full bg-white/5 border border-white/5 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-slate-300">
+              {getTagIcon(tag)} {tag}
+            </span>
+          ))}
+        </div>
+        
+        {project.metrics && (
+          <div className="p-6 rounded-2xl bg-royal-indigo/10 border border-royal-indigo/20">
+            <h4 className="text-royal-indigo font-bold text-sm uppercase tracking-widest mb-2">Outcome:</h4>
+            <p className="text-white text-lg">{project.metrics}</p>
+          </div>
+        )}
+      </motion.div>
+    </motion.div>
+  );
 
   return (
     <section id="projects" className="relative py-32 px-6">
@@ -31,13 +97,35 @@ export const Projects: React.FC = () => {
                 scale: 1.01,
                 borderColor: "rgba(139, 92, 246, 0.4)"
               }}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#0F172A]/40 p-12 transition-all duration-500 backdrop-blur-sm"
+              onClick={() => setSelectedProject(project)}
+              className="cursor-pointer group relative flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#0F172A]/40 p-12 transition-all duration-500 backdrop-blur-sm"
             >
               <div>
                 <div className="flex justify-between items-start mb-10">
-                  <div className="p-5 rounded-2xl bg-surface/50 border border-white/10 text-royal-indigo group-hover:scale-110 group-hover:bg-royal-indigo/10 transition-all">
-                    {index % 2 === 0 ? <Database size={28} /> : <Terminal size={28} />}
-                  </div>
+                  <motion.div 
+                    whileHover={{ 
+                      scale: 1.1,
+                      boxShadow: "0 0 25px rgba(139, 92, 246, 0.5)"
+                    }}
+                    className="p-5 rounded-2xl bg-surface/50 border border-white/10 text-royal-indigo transition-all duration-300 group-hover:bg-royal-indigo/10"
+                  >
+                    <motion.div
+                      animate={{
+                        scale: [1, 1.1, 1],
+                      }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 2,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      {project.id === 'smartshift' && <Zap size={28} />}
+                      {project.id === 'traceability' && <BarChart3 size={28} />}
+                      {project.id === 'email-bol' && <Mail size={28} />}
+                      {project.id === 'lt03-enhancement' && <Terminal size={28} />}
+                      {project.id === 'copa-reconciliation' && <Database size={28} />}
+                    </motion.div>
+                  </motion.div>
                   <div className="flex gap-4">
                     <motion.div whileHover={{ scale: 1.2, color: "#fff" }} className="text-slate-600 transition-colors cursor-pointer">
                       <Share2 size={20} />
@@ -57,8 +145,8 @@ export const Projects: React.FC = () => {
 
                 <div className="flex flex-wrap gap-3">
                   {project.tags.map(tag => (
-                    <span key={tag} className="rounded-full bg-white/5 border border-white/5 px-5 py-2 font-mono text-[10px] uppercase tracking-widest text-slate-300 transition-all hover:bg-white/10">
-                      {tag}
+                    <span key={tag} className="flex items-center rounded-full bg-white/5 border border-white/5 px-5 py-2 font-mono text-[10px] uppercase tracking-widest text-slate-300 transition-all hover:bg-white/10">
+                      {getTagIcon(tag)} {tag}
                     </span>
                   ))}
                 </div>

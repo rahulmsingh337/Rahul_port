@@ -5,7 +5,7 @@ export const AnimatedBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: 0, y: 0, active: false });
   const { scrollYProgress } = useScroll();
-  const scrollSmooth = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+  const scrollSmooth = useSpring(scrollYProgress, { stiffness: 80, damping: 20 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -71,10 +71,10 @@ export const AnimatedBackground: React.FC = () => {
       particles = Array.from({ length: particleCount }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 1.5 + 0.5,
-        baseOpacity: Math.random() * 0.3 + 0.1
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5,
+        size: Math.random() * 3 + 2, // Bigger
+        baseOpacity: Math.random() * 0.4 + 0.2
       }));
 
       signals = [];
@@ -135,6 +135,20 @@ export const AnimatedBackground: React.FC = () => {
         if (p.x > width) p.x = 0;
         if (p.y < 0) p.y = height;
         if (p.y > height) p.y = 0;
+
+        // Draw connections if close (DNA Bond effect)
+        particles.forEach((p2, j) => {
+          const dxC = p.x - p2.x;
+          const dyC = p.y - p2.y;
+          const distC = Math.sqrt(dxC * dxC + dyC * dyC);
+          if (distC < 120) {
+            ctx.strokeStyle = `rgba(139, 92, 246, ${0.12 - distC / 1000})`;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        });
 
         // Mouse behavior logic
         const dx = mouse.current.x - p.x;

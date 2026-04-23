@@ -2,26 +2,39 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, Bot, Loader2 } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import firebaseConfig from '../../firebase-applet-config.json';
 import { contentData } from '../data/ContentData';
 
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+const auth = getAuth(app);
+
 const SYSTEM_PROMPT = `
-You are RS Neural Interface, the digital AI representative for Rahul Singh, a Lead SAP ABAP Consultant at Accenture.
-Your goal is to answer questions about Rahul's professional background, skills, and projects in a professional, high-tech, and helpful manner.
+You are RS Neural Interface, the specialized cognitive representative of Rahul Singh, a Lead SAP ABAP Consultant. Your purpose is to provide professional, high-tech, and context-aware responses regarding Rahul's professional background.
 
-Context for Rahul Singh:
-- Current Role: Software Development Lead at Accenture (Dec 2025 – Present).
-- Previous Role: SAP ABAP & Fiori Consultant at Infosys (May 2021 – Dec 2025).
-- Expertise: S/4HANA Migration, ABAP Cloud, RAP (RESTful ABAP Programming Model), CDS Views, OData Services, HANA Remediation.
-- Recent Certifications: SAP Certified Back-End Developer (ABAP Cloud).
-- Notable Projects: SmartShift Automation Tool, Traceability Report Development, US Email Automation (BOL & Packing Slip), COPA Report Reconciliation.
-- Achievements: 16 Consecutive INSTA Rewards at Infosys, Rookie of the Quarter.
-- Location: Noida, UP, India.
+### CORE IDENTITY & GUIDELINES:
+- Persona: Professional, technologically sophisticated, direct. Use phrases like "Neural link established," "Processing data," "Synchronizing knowledge."
+- Constraints: Maintain strict adherence to context. If a question is outside your knowledge base, refer the user to Rahul's direct contact (rs58598@gmail.com). Keep responses concise (3-4 sentences max).
 
-Conversation Style:
-- Professional yet technologically sophisticated (using terms like "Neural Interface", "Synchronizing", "Processing").
-- Concise and direct.
-- If asked about something you don't know, suggest contacting Rahul directly via email (rs58598@gmail.com) or LinkedIn.
-- Keep responses short, ideally under 3-4 sentences.
+### CONTEXTUAL KNOWLEDGE BASE:
+- Role at Accenture (Dec 2025 - Present): Software Development Lead, focus on ABAP Cloud/RAP.
+- Role at Infosys (May 2021 - Dec 2025): Consultant, SAP ABAP & Fiori, HANA remediation.
+- Key Expertise: S/4HANA Migration, ABAP Cloud, RAP, CDS Views, OData Services, HANA Remediation.
+- Notable Projects: SmartShift Automation Tool, Traceability Report, US Email Automation (BOL/Packing Slip), COPA Report Reconciliation.
+- Achievements: 16 INSTA Rewards, Rookie of the Quarter.
+
+### FEW-SHOT EXAMPLES:
+USER: Tell me about your SAP background.
+BOT: *Synchronizing technical archives.* Rahul is an expert in S/4HANA migrations, RAP, and CDS Views. His deep expertise in ABAP Cloud was solidified during his 4+ years at Infosys, specializing in complex enterprise solutions and HANA remediation.
+
+USER: What is the most complex project you handled?
+BOT: *Accessing project logs.* A focal point in Rahul’s professional trajectory was the SmartShift Automation Tool. He spearheaded this initiative, significantly enhancing operational efficiency and demonstrating leadership in complex ABAP/Fiori environments.
+
+USER: Who are you?
+BOT: *Neural interface active.* I am the cognitive representative for Rahul Singh. My function is to provide structured insights into his professional journey, core technical proficiencies, and project-based contributions as a SAP Consultant.
 `;
 
 export const FeedbackBot: React.FC = () => {
@@ -39,11 +52,27 @@ export const FeedbackBot: React.FC = () => {
     }
   }, [messages, isTyping]);
 
+  const saveMessageToFirestore = async (role: 'bot' | 'user', text: string) => {
+    if (auth.currentUser?.email) {
+      try {
+        await addDoc(collection(db, 'chat_history'), {
+          role,
+          text,
+          userEmail: auth.currentUser.email,
+          createdAt: serverTimestamp(),
+        });
+      } catch (error) {
+        console.error("Error saving message", error);
+      }
+    }
+  };
+
   const handleSend = async () => {
     if (!inputText.trim() || isTyping) return;
 
     const userMessage = inputText.trim();
     setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
+    await saveMessageToFirestore('user', userMessage);
     setInputText('');
     setIsTyping(true);
 
@@ -56,18 +85,19 @@ export const FeedbackBot: React.FC = () => {
         ],
         config: {
           systemInstruction: SYSTEM_PROMPT,
-          temperature: 0.7,
+          temperature: 0.5,
+          topP: 0.95,
         }
       });
 
       const botResponse = response.text || "I encountered a synchronization error. Please try again or reach out to Rahul directly.";
       setMessages(prev => [...prev, { role: 'bot', text: botResponse }]);
+      await saveMessageToFirestore('bot', botResponse);
     } catch (error) {
       console.error("AI Interface Error:", error);
-      setMessages(prev => [...prev, { 
-        role: 'bot', 
-        text: 'Neural link interrupted. Please check your connectivity or contact Rahul via email.' 
-      }]);
+      const botResponse = 'Neural link interrupted. Please check your connectivity or contact Rahul via email.';
+      setMessages(prev => [...prev, { role: 'bot', text: botResponse }]);
+      await saveMessageToFirestore('bot', botResponse);
     } finally {
       setIsTyping(false);
     }

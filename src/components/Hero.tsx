@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'motion/react';
-import { Linkedin, Mail, Phone, Download, MapPin, Globe } from 'lucide-react';
+import { Linkedin, Mail, Phone, Download, MapPin, Globe, Instagram } from 'lucide-react';
 import { contentData } from '../data/ContentData';
 
 const HeroSectionContent: React.FC<{
@@ -31,27 +31,12 @@ const HeroSectionContent: React.FC<{
       className="absolute flex flex-col items-center text-center max-w-5xl"
     >
       {index === 0 && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, duration: 1 }}
-          className="relative mb-12 h-56 w-56 overflow-hidden rounded-[2.5rem] border border-white/10 shadow-[0_0_50px_rgba(139,92,246,0.15)] md:h-72 md:w-72"
-        >
-          <motion.img
-            src="/profile.jpg"
-            alt="Rahul Singh"
-            className="h-full w-full object-cover grayscale brightness-90 hover:grayscale-0 hover:scale-105 transition-all duration-700"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-surface/90 via-transparent to-transparent" />
-
-          {/* Decorative corner */}
-          <motion.div
+         <motion.div
             animate={{ opacity: [0.2, 0.5, 0.2] }}
             transition={{ duration: 3, repeat: Infinity }}
             className="absolute top-4 right-4 h-2 w-2 rounded-full bg-vibrant-cyan shadow-[0_0_10px_rgba(34,211,238,0.8)]"
           />
-        </motion.div>
-      )}
+       )}
 
       <motion.h1 className="font-display text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl leading-[1.1]">
         {section.text.split('. ').map((part: string, i: number) => (
@@ -95,6 +80,16 @@ const HeroSectionContent: React.FC<{
               className="text-slate-500 transition-colors"
             >
               <Globe size={22} />
+            </motion.a>
+            <motion.a
+              href="https://www.instagram.com/squatile3375/"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -5, color: "var(--color-royal-indigo)" }}
+              whileTap={{ scale: 0.9 }}
+              className="text-slate-500 transition-colors"
+            >
+              <Instagram size={22} />
             </motion.a>
             <motion.a
               href="mailto:rs58598@gmail.com"

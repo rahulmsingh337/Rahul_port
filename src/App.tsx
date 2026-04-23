@@ -15,6 +15,8 @@ import { Certifications } from './components/Certifications';
 import { Education } from './components/Education';
 import { AnimatedBackground } from './components/AnimatedBackground';
 import { FeedbackBot } from './components/FeedbackBot';
+import { AdminChatHistory } from './components/AdminChatHistory';
+import { Linkedin, Mail, Phone, Instagram, Github } from 'lucide-react';
 
 function MouseFollower() {
   const mouseX = useSpring(0, { stiffness: 40, damping: 20 });
@@ -39,6 +41,19 @@ function MouseFollower() {
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('admin') === 'true') {
+        setIsAdmin(true);
+    }
+  }, []);
+
+  if (isAdmin) {
+    return <AdminChatHistory />;
+  }
+
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -150,11 +165,12 @@ export default function App() {
                 </p>
               </div>
               <div className="flex flex-col gap-6 text-center md:items-end md:text-right">
-                <div className="flex flex-wrap justify-center gap-x-10 gap-y-4 md:justify-end">
-                  <a href="https://www.linkedin.com/in/rahul-singh-sap-abap/" target="_blank" rel="noopener noreferrer" className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500 hover:text-royal-indigo transition-colors">LinkedIn</a>
-                  <a href="https://github.com/rahulmsingh337/" target="_blank" rel="noopener noreferrer" className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500 hover:text-royal-indigo transition-colors">GitHub</a>
-                  <a href="https://wa.me/918989805836" target="_blank" rel="noopener noreferrer" className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500 hover:text-royal-indigo transition-colors">WhatsApp</a>
-                  <a href="mailto:rs58598@gmail.com" className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500 hover:text-royal-indigo transition-colors">Email</a>
+                <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 md:justify-end">
+                  <a href="https://www.linkedin.com/in/rahul-singh-sap-abap/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors"><Linkedin size={20} /></a>
+                  <a href="https://github.com/rahulmsingh337/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors"><Github size={20} /></a>
+                  <a href="https://www.instagram.com/squatile3375/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors"><Instagram size={20} /></a>
+                  <a href="https://wa.me/918989805836" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors"><Phone size={20} /></a>
+                  <a href="mailto:rs58598@gmail.com" className="text-slate-500 hover:text-royal-indigo transition-colors"><Mail size={20} /></a>
                 </div>
                 <div className="flex items-center gap-3 justify-center md:justify-end text-slate-700">
                   <div className="h-1 w-1 rounded-full bg-slate-800" />
