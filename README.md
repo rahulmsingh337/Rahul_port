@@ -2,7 +2,7 @@
 
 # Rahul Singh — Portfolio
 
-**SAP ABAP Lead Consultant · React Developer · AI Enthusiast**
+**SAP ABAP Lead Consultant · RAP Developer · AI Enthusiast**
 
 [![Portfolio](https://img.shields.io/badge/🌐_Live_Portfolio-rahulsinghsap.netlify.app-0078D4?style=for-the-badge)](https://rahulsinghsap.netlify.app)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-rahul--singh--sap--abap-0A66C2?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/rahul-singh-sap-abap)
