@@ -60,6 +60,21 @@ const HeroSectionContent: React.FC<{
           transition={{ delay: 1.2 }}
           className="mt-12 flex flex-col items-center gap-8"
         >
+          {/* GitHub Banner */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1.4, duration: 0.8, ease: "easeOut" }}
+            className="relative w-full max-w-2xl"
+          >
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-royal-indigo/40 via-vibrant-cyan/20 to-royal-indigo/40 blur-md opacity-70" />
+            <img
+              src="/github-banner.png"
+              alt="Rahul Singh — SAP ABAP Lead"
+              className="relative w-full rounded-2xl border border-white/10 shadow-[0_0_40px_rgba(99,102,241,0.15)]"
+            />
+          </motion.div>
+
           <div className="flex items-center gap-10">
             <motion.a
               href="https://www.linkedin.com/in/rahul-singh-sap-abap/"
