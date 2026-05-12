@@ -3,9 +3,10 @@ import { motion, useScroll, useTransform, MotionValue } from 'motion/react';
 import { Linkedin, Mail, Phone, Download, MapPin, Globe, Instagram } from 'lucide-react';
 import { contentData } from '../data/ContentData';
 
-const HeroSectionContent: React.FC<{
+/* ─── Sections 1 & 2: scroll-animated overlays ─── */
+const ScrollSection: React.FC<{
   section: any;
-  index: number;
+  index: number; // 1 or 2
   scrollYProgress: MotionValue<number>;
 }> = ({ section, index, scrollYProgress }) => {
   const start = index * 0.33;
@@ -14,182 +15,165 @@ const HeroSectionContent: React.FC<{
   const opacity = useTransform(
     scrollYProgress,
     [start, start + 0.05, end - 0.05, end],
-    index === 0 ? [1, 1, 1, 0] : [0, 1, 1, 0]
+    [0, 1, 1, 0]
   );
-
-  const y = useTransform(scrollYProgress, [start, end], [index === 0 ? 0 : 60, -60]);
-
+  const y = useTransform(scrollYProgress, [start, end], [60, -60]);
   const subtextColor = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    ["#8B5CF6", "#D8B4FE", "#22D3EE"]
+    ['#8B5CF6', '#D8B4FE', '#22D3EE']
   );
 
   return (
     <motion.div
       style={{ opacity, y }}
-      className="absolute flex flex-col items-center text-center max-w-5xl"
+      className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
     >
-      {index === 0 && (
-         <motion.div
-            animate={{ opacity: [0.2, 0.5, 0.2] }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="absolute top-4 right-4 h-2 w-2 rounded-full bg-vibrant-cyan shadow-[0_0_10px_rgba(34,211,238,0.8)]"
-          />
-       )}
-
       <motion.h1 className="font-display text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl leading-[1.1]">
         {section.text.split('. ').map((part: string, i: number) => (
-          <span key={i} className="block mt-2">
-            {part}
-          </span>
+          <span key={i} className="block mt-2">{part}</span>
         ))}
       </motion.h1>
-
       <motion.p
         style={{ color: subtextColor }}
-        className="mt-10 font-mono text-sm uppercase tracking-[0.4em] md:text-xl font-medium"
+        className="mt-8 font-mono text-sm uppercase tracking-[0.4em] md:text-lg font-medium"
       >
         {section.subtextText}
       </motion.p>
-
-      {index === 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2 }}
-          className="mt-12 flex flex-col items-center gap-8"
-        >
-          {/* GitHub Banner */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1.4, duration: 0.8, ease: "easeOut" }}
-            className="relative w-full max-w-2xl"
-          >
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-royal-indigo/40 via-vibrant-cyan/20 to-royal-indigo/40 blur-md opacity-70" />
-            <img
-              src="/github-banner.png"
-              alt="Rahul Singh — SAP ABAP Lead"
-              className="relative w-full rounded-2xl border border-white/10 shadow-[0_0_40px_rgba(99,102,241,0.15)]"
-            />
-          </motion.div>
-
-          <div className="flex items-center gap-10">
-            <motion.a
-              href="https://www.linkedin.com/in/rahul-singh-sap-abap/"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ y: -5, color: "var(--color-royal-indigo)" }}
-              whileTap={{ scale: 0.9 }}
-              className="text-slate-500 transition-colors"
-            >
-              <Linkedin size={22} />
-            </motion.a>
-            <motion.a
-              href="https://github.com/rahulmsingh337/"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ y: -5, color: "var(--color-royal-indigo)" }}
-              whileTap={{ scale: 0.9 }}
-              className="text-slate-500 transition-colors"
-            >
-              <Globe size={22} />
-            </motion.a>
-            <motion.a
-              href="https://www.instagram.com/squatile3375/"
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ y: -5, color: "var(--color-royal-indigo)" }}
-              whileTap={{ scale: 0.9 }}
-              className="text-slate-500 transition-colors"
-            >
-              <Instagram size={22} />
-            </motion.a>
-            <motion.a
-              href="mailto:rs58598@gmail.com"
-              whileHover={{ y: -5, color: "var(--color-royal-indigo)" }}
-              whileTap={{ scale: 0.9 }}
-              className="text-slate-500 transition-colors"
-            >
-              <Mail size={22} />
-            </motion.a>
-            <motion.a
-              href="https://wa.me/918989805836"
-              whileHover={{ y: -5, color: "var(--color-royal-indigo)" }}
-              whileTap={{ scale: 0.9 }}
-              className="text-slate-500 transition-colors"
-            >
-              <Phone size={22} />
-            </motion.a>
-          </div>
-
-          <div className="flex items-center gap-3 rounded-full bg-white/5 border border-white/5 px-4 py-2 text-slate-500 font-mono text-[10px] uppercase tracking-widest">
-            <MapPin size={12} className="text-royal-indigo" />
-            <span>Noida, Uttar Pradesh, India</span>
-          </div>
-        </motion.div>
-      )}
     </motion.div>
   );
 };
 
+/* ─── Section 0: static hero with banner ─── */
+const HeroInitial: React.FC<{ scrollYProgress: MotionValue<number> }> = ({ scrollYProgress }) => {
+  const opacity = useTransform(scrollYProgress, [0, 0.28, 0.33], [1, 1, 0]);
+  const subtextColor = useTransform(scrollYProgress, [0, 0.5, 1], ['#8B5CF6', '#D8B4FE', '#22D3EE']);
+
+  return (
+    <motion.div
+      style={{ opacity }}
+      className="absolute inset-0 flex flex-col items-center justify-start pt-20 px-6 overflow-hidden"
+    >
+      {/* Name */}
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+        className="font-display text-3xl md:text-5xl font-bold tracking-tight text-white text-center leading-tight"
+      >
+        RAHUL SINGH
+        <span className="block text-base md:text-xl font-normal tracking-widest text-slate-400 mt-1">
+          Engineering the Intelligent Enterprise
+        </span>
+      </motion.h1>
+
+      {/* Subtitle */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+        style={{ color: subtextColor }}
+        className="mt-3 font-mono text-[10px] md:text-xs uppercase tracking-[0.3em] font-medium text-center"
+      >
+        SAP ABAP Lead · S/4HANA Migration · HANA Remediation
+      </motion.p>
+
+      {/* Banner — centrepiece */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.9, ease: 'easeOut' }}
+        className="relative mt-5 w-full max-w-3xl"
+      >
+        <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-royal-indigo/50 via-vibrant-cyan/20 to-royal-indigo/50 blur-lg opacity-60" />
+        <img
+          src="/github-banner.png"
+          alt="Rahul Singh — SAP ABAP Lead"
+          className="relative w-full rounded-2xl border border-white/10 shadow-[0_0_60px_rgba(99,102,241,0.2)]"
+        />
+      </motion.div>
+
+      {/* Social links */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2 }}
+        className="mt-5 flex items-center gap-8"
+      >
+        {[
+          { href: 'https://www.linkedin.com/in/rahul-singh-sap-abap/', icon: <Linkedin size={20} /> },
+          { href: 'https://github.com/rahulmsingh337/', icon: <Globe size={20} /> },
+          { href: 'https://www.instagram.com/squatile3375/', icon: <Instagram size={20} /> },
+          { href: 'mailto:rs58598@gmail.com', icon: <Mail size={20} /> },
+          { href: 'https://wa.me/918989805836', icon: <Phone size={20} /> },
+        ].map(({ href, icon }) => (
+          <motion.a
+            key={href}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ y: -4, color: 'var(--color-royal-indigo)' }}
+            whileTap={{ scale: 0.9 }}
+            className="text-slate-500 transition-colors"
+          >
+            {icon}
+          </motion.a>
+        ))}
+      </motion.div>
+
+      {/* Location + Resume row */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.4 }}
+        className="mt-4 flex flex-wrap items-center justify-center gap-4"
+      >
+        <div className="flex items-center gap-2 rounded-full bg-white/5 border border-white/5 px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-slate-500">
+          <MapPin size={11} className="text-royal-indigo" />
+          <span>Noida, Uttar Pradesh, India</span>
+        </div>
+
+        <motion.a
+          href="/resume.pdf"
+          download="Rahul_Singh_Resume.pdf"
+          whileHover={{
+            scale: 1.05,
+            boxShadow: '0 0 30px rgba(99,102,241,0.4)',
+          }}
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center gap-2 rounded-full border border-royal-indigo/40 bg-royal-indigo/10 px-6 py-2 font-mono text-[10px] uppercase tracking-widest text-white transition-all hover:bg-royal-indigo/20"
+        >
+          <Download size={13} />
+          Obtain Resume
+        </motion.a>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+/* ─── Main Hero ─── */
 export const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"]
+    offset: ['start start', 'end end'],
   });
 
   return (
     <section ref={containerRef} className="relative h-[300vh] w-full">
-      <div className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden px-6">
-        {contentData.heroSections.map((section, index) => (
-          <HeroSectionContent
+      <div className="sticky top-0 h-screen w-full overflow-hidden">
+        {/* Section 0 */}
+        <HeroInitial scrollYProgress={scrollYProgress} />
+
+        {/* Sections 1 & 2 */}
+        {contentData.heroSections.slice(1).map((section, i) => (
+          <ScrollSection
             key={section.id}
             section={section}
-            index={index}
+            index={i + 1}
             scrollYProgress={scrollYProgress}
           />
         ))}
-
-        {/* Action Button - Floating at bottom */}
-        <motion.div 
-          className="absolute bottom-16 z-20"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
-        >
-          {/* Subtle Continuous Pulsing Glow */}
-          <motion.div
-            animate={{ 
-              opacity: [0.2, 0.5, 0.2],
-              scale: [0.95, 1.05, 0.95],
-            }}
-            transition={{ 
-              duration: 4, 
-              repeat: Infinity, 
-              ease: "easeInOut" 
-            }}
-            className="absolute inset-0 z-0 bg-navy blur-2xl rounded-full"
-          />
-
-          <motion.a
-            href="/resume.pdf"
-            download="Rahul_Singh_Resume.pdf"
-            whileHover={{ 
-              scale: 1.05, 
-              backgroundColor: "var(--color-navy)",
-              borderColor: "rgba(139, 92, 246, 0.5)",
-              boxShadow: "0 0 40px rgba(15, 23, 42, 0.8)" 
-            }}
-            whileTap={{ scale: 0.95 }}
-            className="group relative z-10 flex items-center gap-4 rounded-full border border-white/10 bg-white/5 px-10 py-5 backdrop-blur-xl transition-all"
-          >
-            <Download className="text-white group-hover:animate-bounce" size={18} />
-            <span className="font-display text-sm font-bold tracking-widest text-white uppercase">Obtain Resume</span>
-          </motion.a>
-        </motion.div>
       </div>
     </section>
   );
