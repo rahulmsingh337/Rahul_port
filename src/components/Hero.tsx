@@ -14,10 +14,10 @@ const HeroSectionContent: React.FC<{
   const opacity = useTransform(
     scrollYProgress,
     [start, start + 0.05, end - 0.05, end],
-    [0, 1, 1, 0]
+    index === 0 ? [1, 1, 1, 0] : [0, 1, 1, 0]
   );
 
-  const y = useTransform(scrollYProgress, [start, end], [60, -60]);
+  const y = useTransform(scrollYProgress, [start, end], [index === 0 ? 0 : 60, -60]);
 
   const subtextColor = useTransform(
     scrollYProgress,
