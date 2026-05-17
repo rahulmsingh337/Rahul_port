@@ -146,8 +146,10 @@ const Lightbox: React.FC<LightboxProps> = ({ images, startIndex, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-md p-4"
+      className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black/90 backdrop-blur-md"
+      style={{ padding: '56px 16px 48px' }}
     >
+      {/* Close button */}
       <button
         onClick={onClose}
         className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
@@ -155,23 +157,25 @@ const Lightbox: React.FC<LightboxProps> = ({ images, startIndex, onClose }) => {
         <X size={20} />
       </button>
 
+      {/* Prev / Next */}
       {images.length > 1 && (
         <>
           <button
             onClick={(e) => { e.stopPropagation(); prev(); }}
-            className="absolute left-4 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-10"
           >
             <ChevronLeft size={22} />
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); next(); }}
-            className="absolute right-4 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-10"
           >
             <ChevronRight size={22} />
           </button>
         </>
       )}
 
+      {/* Image — fills available space, never cropped */}
       <motion.img
         key={current}
         initial={{ opacity: 0, scale: 0.94 }}
@@ -180,9 +184,18 @@ const Lightbox: React.FC<LightboxProps> = ({ images, startIndex, onClose }) => {
         src={images[current]}
         alt="Certificate"
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[85vh] max-w-[90vw] rounded-2xl shadow-2xl object-contain"
+        style={{
+          maxHeight: '100%',
+          maxWidth: '90vw',
+          width: 'auto',
+          height: 'auto',
+          objectFit: 'contain',
+          borderRadius: '16px',
+          boxShadow: '0 25px 60px rgba(0,0,0,0.6)',
+        }}
       />
 
+      {/* Dot indicators */}
       {images.length > 1 && (
         <div className="absolute bottom-4 flex gap-2">
           {images.map((_, i) => (
