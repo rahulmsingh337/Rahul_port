@@ -48,6 +48,13 @@ const riseAwards = [
     period: 'FY25 Q2',
     image: '/ach-unit-rise.png',
   },
+  {
+    id: 'rookie-fy24',
+    title: 'Rookie of the Qtr',
+    category: 'RISE Awards',
+    period: 'FY24 Q2',
+    image: '/cert-rookie.png',
+  },
 ];
 
 const instaAwards = [
