@@ -13,6 +13,7 @@ import Skills from './components/Skills';
 import { ImpactStrip } from './components/ImpactStrip';
 import { Certifications } from './components/Certifications';
 import { Education } from './components/Education';
+import { Awards } from './components/Awards';
 import { AnimatedBackground } from './components/AnimatedBackground';
 import { FeedbackBot } from './components/FeedbackBot';
 import { AdminChatHistory } from './components/AdminChatHistory';
@@ -133,6 +134,7 @@ export default function App() {
               <Certifications />
               <Experience />
               <Education />
+              <Awards />
               <Projects />
             </div>
           </main>
