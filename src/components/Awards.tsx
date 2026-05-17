@@ -146,8 +146,8 @@ const Lightbox: React.FC<LightboxProps> = ({ images, startIndex, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
-      className="fixed inset-0 z-[200] bg-black/92 backdrop-blur-md"
-      style={{ display: 'grid', placeItems: 'center' }}
+      className="fixed left-0 right-0 bottom-0 z-[200] bg-black/95 backdrop-blur-md"
+      style={{ top: '72px', display: 'grid', placeItems: 'center', paddingBottom: '16px' }}
     >
       {/* Close */}
       <button
@@ -186,7 +186,7 @@ const Lightbox: React.FC<LightboxProps> = ({ images, startIndex, onClose }) => {
         onClick={(e) => e.stopPropagation()}
         onDoubleClick={onClose}
         style={{
-          maxHeight: 'calc(100vh - 120px)',
+          maxHeight: 'calc(100vh - 104px)',
           maxWidth: 'min(92vw, 960px)',
           width: 'auto',
           height: 'auto',
