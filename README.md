@@ -15,7 +15,7 @@
 
 ## About This Portfolio
 
-Personal portfolio website for **Rahul Singh** — SAP ABAP Lead Consultant with 5+ years of enterprise experience at Accenture and Infosys. The site showcases professional experience, certifications, key projects, and includes a Gemini AI-powered interface for interactive exploration.
+Personal portfolio website for **Rahul Singh** — SAP ABAP Lead Consultant with 5+ years of enterprise experience at Accenture and Infosys. The site showcases professional experience, certifications, awards & recognitions, key projects, and includes a Gemini AI-powered interface for interactive exploration.
 
 Built with modern React tooling, smooth Framer Motion animations, and backed by Firebase — because even a SAP consultant's portfolio should have clean architecture.
 
@@ -118,7 +118,7 @@ To deploy your own fork:
 
 **Certifications:** SAP Certified Back-End Developer (ABAP Cloud · C_ABAPD_2601), SAP ALE IDocs, SAP Cloud Platform
 
-**Awards:** Unit Rise Award (Rookie of the Quarter), Best Performer – EAS SAP Unit, ACE COE Performer Award, 5× Unit Rise Awards, 16× INSTA Rewards
+**Awards:** Infosys Skill Tags (SAP S/4HANA Functional & Technical Professional) · EASSAP RISE Awards — COE ACE, Eureka, Rookie of the Qtr (H1-FY26), Rookie of the Qtr (FY25 Q2) · 9× Insta Awards (Peer Recognition, 2021–2023)
 
 ---
 
