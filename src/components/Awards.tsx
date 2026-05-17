@@ -146,13 +146,13 @@ const Lightbox: React.FC<LightboxProps> = ({ images, startIndex, onClose }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
-      className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black/90 backdrop-blur-md"
-      style={{ padding: '56px 16px 48px' }}
+      className="fixed inset-0 z-[200] bg-black/92 backdrop-blur-md"
+      style={{ display: 'grid', placeItems: 'center' }}
     >
-      {/* Close button */}
+      {/* Close */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+        className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
       >
         <X size={20} />
       </button>
@@ -162,42 +162,46 @@ const Lightbox: React.FC<LightboxProps> = ({ images, startIndex, onClose }) => {
         <>
           <button
             onClick={(e) => { e.stopPropagation(); prev(); }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-10"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
           >
             <ChevronLeft size={22} />
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); next(); }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-10"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
           >
             <ChevronRight size={22} />
           </button>
         </>
       )}
 
-      {/* Image — fills available space, never cropped */}
+      {/* Image — double-click to close */}
       <motion.img
         key={current}
-        initial={{ opacity: 0, scale: 0.94 }}
+        initial={{ opacity: 0, scale: 0.93 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.2 }}
         src={images[current]}
         alt="Certificate"
         onClick={(e) => e.stopPropagation()}
+        onDoubleClick={onClose}
         style={{
-          maxHeight: '100%',
-          maxWidth: '90vw',
+          maxHeight: 'calc(100vh - 120px)',
+          maxWidth: 'min(92vw, 960px)',
           width: 'auto',
           height: 'auto',
+          display: 'block',
           objectFit: 'contain',
-          borderRadius: '16px',
-          boxShadow: '0 25px 60px rgba(0,0,0,0.6)',
+          borderRadius: '12px',
+          boxShadow: '0 32px 80px rgba(0,0,0,0.7)',
+          cursor: 'zoom-out',
+          marginBottom: images.length > 1 ? '32px' : '0',
         }}
       />
 
-      {/* Dot indicators */}
+      {/* Dots */}
       {images.length > 1 && (
-        <div className="absolute bottom-4 flex gap-2">
+        <div className="absolute bottom-5 flex gap-2">
           {images.map((_, i) => (
             <button
               key={i}
