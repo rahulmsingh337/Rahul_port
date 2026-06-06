@@ -8,7 +8,7 @@ export const resumeData = {
     phone: "+91-8989805836",
     links: [
       { label: "LinkedIn", url: "https://www.linkedin.com/in/rahul-singh-sap-abap/" },
-      { label: "Portfolio", url: "https://rahulsingh3.netlify.app" },
+      { label: "Portfolio", url: "https://rahulsinghsap.netlify.app" },
       { label: "GitHub", url: "https://github.com/rahulmsingh337/" }
     ]
   },
