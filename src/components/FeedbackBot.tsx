@@ -1,30 +1,54 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, Bot, Loader2 } from 'lucide-react';
+import { GoogleGenAI } from "@google/genai";
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import firebaseConfig from '../../firebase-applet-config.json';
+import { contentData } from '../data/ContentData';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 const auth = getAuth(app);
 
-// API call goes to Netlify serverless function — key never touches the browser
-const callChatAPI = async (message: string): Promise<string> => {
-  const response = await fetch('/.netlify/functions/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message }),
-  });
+const GEMINI_KEY = "AIzaSyB7kCjvCOhCAj9UL98HT0qL8jJBuR2Nv3o";
 
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
-  }
+const SYSTEM_PROMPT = `
+You are an AI assistant representing Rahul Singh, a Lead SAP ABAP Consultant at Accenture.
+Answer questions about his professional background concisely and professionally.
 
-  const data = await response.json();
-  return data.text || 'Unable to get a response right now. Please contact Rahul directly at rs58598@gmail.com.';
-};
+PROFESSIONAL BACKGROUND:
+- Current Role: Software Development Lead at Accenture (Dec 2025 – Present), Noida
+  Focus: ECC to S/4HANA migration, HANA remediation, CDS Views, RAP/ABAP Cloud, OData services
+- Previous Role: SAP ABAP & Fiori Consultant at Infosys (May 2021 – Dec 2025)
+  Focus: ALV Reports, IDocs, ALE, Adobe Forms, SmartForms, ABAP 7.5, SAP Fiori
+
+KEY SKILLS: SAP ABAP 7.5, OOABAP, S/4HANA Migration, HANA Remediation, CDS Views, RAP/ABAP Cloud,
+OData Services, SAP Fiori/UI5, BAPIs, RFCs, IDocs, ALE, BRF Plus, SmartForms, Adobe Forms,
+SAP Workflow, Performance Tuning
+
+CERTIFICATIONS: SAP Certified Back-End Developer (ABAP Cloud), SAP ALE IDocs,
+SAP S/4HANA Functional Professional (Infosys), SAP S/4HANA Technical Professional (Infosys)
+
+NOTABLE PROJECTS:
+- SmartShift Automation Tool: Automated S/4HANA migration workstreams
+- Traceability Report Suite: Custom ALV reporting for order/delivery visibility
+- US Email Automation (BOL & Packing Slip): Consolidated multi-PO/DN document flows
+- LT03 Transaction Enhancement: Custom solution for warehouse operation limitations
+- COPA Report Reconciliation: Financial reconciliation with 100% accuracy
+
+ACHIEVEMENTS: 16 consecutive INSTA Peer Recognition Awards, Rookie of the Quarter (FY24 Q2, FY25 Q2),
+COE ACE Award, Eureka Award
+
+CONTACT: rs58598@gmail.com | LinkedIn: linkedin.com/in/rahul-singh-sap-abap/
+
+GUIDELINES:
+- Keep responses to 2-4 sentences maximum
+- Be direct and professional
+- If asked something outside this knowledge base, direct them to rs58598@gmail.com
+- Do not fabricate details not listed above
+`;
 
 export const FeedbackBot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -66,11 +90,23 @@ export const FeedbackBot: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const botResponse = await callChatAPI(userMessage);
+      const ai = new GoogleGenAI({ apiKey: GEMINI_KEY });
+      const response = await ai.models.generateContent({
+        model: "gemini-1.5-flash",
+        contents: [{ role: 'user', parts: [{ text: userMessage }] }],
+        config: {
+          systemInstruction: SYSTEM_PROMPT,
+          temperature: 0.5,
+          topP: 0.95,
+          maxOutputTokens: 200,
+        }
+      });
+
+      const botResponse = response.text || "I couldn't generate a response. Please contact Rahul directly at rs58598@gmail.com.";
       setMessages(prev => [...prev, { role: 'bot', text: botResponse }]);
       await saveMessageToFirestore('bot', botResponse);
     } catch (error) {
-      console.error('Chat API Error:', error);
+      console.error('Gemini API Error:', error);
       const fallback = 'Something went wrong. Please reach out to Rahul directly at rs58598@gmail.com.';
       setMessages(prev => [...prev, { role: 'bot', text: fallback }]);
     } finally {
@@ -88,26 +124,17 @@ export const FeedbackBot: React.FC = () => {
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             className="mb-4 w-80 overflow-hidden rounded-2xl border border-white/10 bg-surface/90 shadow-2xl backdrop-blur-xl md:w-96"
           >
-            {/* Header */}
             <div className="flex items-center justify-between bg-gradient-to-r from-royal-indigo to-vibrant-cyan p-5 text-white">
               <div className="flex items-center gap-3">
                 <Bot size={20} />
                 <span className="font-display text-xs font-bold uppercase tracking-widest">Ask About Rahul</span>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="hover:opacity-70 transition-opacity p-1"
-                aria-label="Close chat"
-              >
+              <button onClick={() => setIsOpen(false)} className="hover:opacity-70 transition-opacity p-1" aria-label="Close chat">
                 <X size={18} />
               </button>
             </div>
 
-            {/* Messages */}
-            <div
-              ref={scrollRef}
-              className="h-[380px] overflow-y-auto p-6 space-y-5 scrollbar-hide"
-            >
+            <div ref={scrollRef} className="h-[380px] overflow-y-auto p-6 space-y-5 scrollbar-hide">
               {messages.map((msg, i) => (
                 <motion.div
                   key={i}
@@ -125,11 +152,7 @@ export const FeedbackBot: React.FC = () => {
                 </motion.div>
               ))}
               {isTyping && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex justify-start"
-                >
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
                   <div className="bg-white/5 text-slate-500 rounded-full px-4 py-2 flex items-center gap-2">
                     <Loader2 size={14} className="animate-spin" />
                     <span className="text-[10px] uppercase tracking-widest font-mono">Thinking...</span>
@@ -138,7 +161,6 @@ export const FeedbackBot: React.FC = () => {
               )}
             </div>
 
-            {/* Input */}
             <div className="border-t border-white/5 p-5 flex gap-3 bg-white/[0.02]">
               <input
                 type="text"
