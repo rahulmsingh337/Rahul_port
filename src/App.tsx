@@ -40,20 +40,13 @@ function MouseFollower() {
   );
 }
 
-export default function App() {
+// Admin panel is behind /admin path — URL param trick removed
+function isAdminRoute() {
+  return window.location.pathname === '/admin';
+}
+
+function MainSite() {
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('admin') === 'true') {
-        setIsAdmin(true);
-    }
-  }, []);
-
-  if (isAdmin) {
-    return <AdminChatHistory />;
-  }
 
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -62,7 +55,6 @@ export default function App() {
     restDelta: 0.001
   });
 
-  // Parallax transforms moved to top level to comply with Rules of Hooks
   const footerY1 = useTransform(scrollYProgress, [0.8, 1], [0, -100]);
   const footerOpacity1 = useTransform(scrollYProgress, [0.8, 1], [0, 0.4]);
   const footerY2 = useTransform(scrollYProgress, [0.8, 1], [0, -150]);
@@ -74,11 +66,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (loading) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = loading ? 'hidden' : 'unset';
   }, [loading]);
 
   return (
@@ -103,13 +91,13 @@ export default function App() {
                 <div className="h-16 w-16 rounded-full border-4 border-slate-900 border-b-vibrant-cyan animate-[spin_1.5s_linear_infinite_reverse]" />
                 <div className="absolute h-8 w-8 rounded-lg bg-gradient-to-br from-royal-indigo to-vibrant-cyan animate-pulse" />
               </div>
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
                 className="mt-12 font-mono text-[10px] uppercase tracking-[0.4em] text-slate-500"
               >
-                Syncing Neural Architecture...
+                Loading Portfolio...
               </motion.p>
             </motion.div>
           </motion.div>
@@ -122,10 +110,10 @@ export default function App() {
             className="fixed top-0 left-0 right-0 z-[60] h-1 origin-left bg-gradient-to-r from-royal-indigo via-vibrant-cyan to-electric-blue"
             style={{ scaleX }}
           />
-          
+
           <AnimatedBackground />
           <Navbar />
-          
+
           <main className="relative z-10 flex flex-col gap-32 pb-32">
             <Hero />
             <div className="space-y-48">
@@ -138,23 +126,16 @@ export default function App() {
               <Projects />
             </div>
           </main>
-          
+
           <FeedbackBot />
-          
+
           <footer className="relative z-10 overflow-hidden border-t border-white/5 bg-surface/80 py-24 px-6 backdrop-blur-xl">
-            {/* Parallax Background Elements */}
-            <motion.div 
-              style={{ 
-                y: footerY1,
-                opacity: footerOpacity1
-              }}
+            <motion.div
+              style={{ y: footerY1, opacity: footerOpacity1 }}
               className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-royal-indigo/10 blur-3xl pointer-events-none"
             />
-            <motion.div 
-              style={{ 
-                y: footerY2,
-                opacity: footerOpacity2
-              }}
+            <motion.div
+              style={{ y: footerY2, opacity: footerOpacity2 }}
               className="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-vibrant-cyan/10 blur-3xl pointer-events-none"
             />
 
@@ -162,17 +143,17 @@ export default function App() {
               <div className="max-w-md text-center md:text-left">
                 <h5 className="font-display text-3xl font-bold tracking-tighter text-white mb-6">RAHUL SINGH</h5>
                 <p className="text-slate-500 font-sans text-sm leading-relaxed">
-                  Lead SAP Consultant optimizing global enterprise systems at Accenture. <br className="hidden md:block" />
-                  Specialized in S/4HANA Transformation & Modern Digital Cores.
+                  Lead SAP Consultant driving enterprise S/4HANA transformation at Accenture. <br className="hidden md:block" />
+                  Specialized in ABAP Cloud, CDS Views, RAP, and modern digital cores.
                 </p>
               </div>
               <div className="flex flex-col gap-6 text-center md:items-end md:text-right">
                 <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 md:justify-end">
-                  <a href="https://www.linkedin.com/in/rahul-singh-sap-abap/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors"><Linkedin size={20} /></a>
-                  <a href="https://github.com/rahulmsingh337/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors"><Github size={20} /></a>
-                  <a href="https://www.instagram.com/squatile3375/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors"><Instagram size={20} /></a>
-                  <a href="https://wa.me/918989805836" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors"><Phone size={20} /></a>
-                  <a href="mailto:rs58598@gmail.com" className="text-slate-500 hover:text-royal-indigo transition-colors"><Mail size={20} /></a>
+                  <a href="https://www.linkedin.com/in/rahul-singh-sap-abap/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors" aria-label="LinkedIn"><Linkedin size={20} /></a>
+                  <a href="https://github.com/rahulmsingh337/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors" aria-label="GitHub"><Github size={20} /></a>
+                  <a href="https://www.instagram.com/squatile3375/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors" aria-label="Instagram"><Instagram size={20} /></a>
+                  <a href="https://wa.me/918989805836" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-royal-indigo transition-colors" aria-label="WhatsApp"><Phone size={20} /></a>
+                  <a href="mailto:rs58598@gmail.com" className="text-slate-500 hover:text-royal-indigo transition-colors" aria-label="Email"><Mail size={20} /></a>
                 </div>
                 <div className="flex items-center gap-3 justify-center md:justify-end text-slate-700">
                   <div className="h-1 w-1 rounded-full bg-slate-800" />
@@ -185,4 +166,13 @@ export default function App() {
       )}
     </div>
   );
+}
+
+export default function App() {
+  // Admin panel is now at /admin path and requires Firebase auth — not a URL param trick
+  if (isAdminRoute()) {
+    return <AdminChatHistory />;
+  }
+
+  return <MainSite />;
 }

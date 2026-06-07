@@ -1,5 +1,5 @@
 import React from 'react';
-import { Briefcase, Code, Award, GraduationCap, Database, Terminal, Layers, Cpu, Shield, Layout, Zap } from 'lucide-react';
+import { Briefcase, Award, Database, Terminal, Layers, Cpu, Shield, Layout } from 'lucide-react';
 
 export interface ProjectCard {
   id: string;
@@ -25,7 +25,7 @@ export interface ContentData {
   }[];
   skills: {
     name: string;
-    proficiency: number; // 1-100
+    proficiency: number; // 1–100
     icon: React.ReactNode;
   }[];
 }
@@ -35,87 +35,88 @@ export const contentData: ContentData = {
     {
       id: 1,
       threshold: 0,
-      text: "RAHUL SINGH. Engineering the Intelligent Enterprise.",
-      subtextText: "SAP ABAP Lead | S/4HANA Migration & HANA Remediation Specialist"
+      text: "RAHUL SINGH. SAP ABAP Lead.",
+      subtextText: "S/4HANA Migration · HANA Remediation · ABAP Cloud"
     },
     {
       id: 2,
       threshold: 30,
-      text: "Leading S/4HANA Migrations at Accenture. From Legacy to Cloud.",
-      subtextText: "Software Development Lead | Optimization & Modernization Consultant"
+      text: "5+ Years. Accenture & Infosys. Enterprise Scale.",
+      subtextText: "Leading ECC to S/4HANA migrations for global clients"
     },
     {
       id: 3,
       threshold: 60,
-      text: "SAP Certified Back-End Developer (ABAP Cloud). Precision at Scale.",
-      subtextText: "CDS Views · RAP · OData mastery for modern digital cores"
+      text: "SAP Certified ABAP Cloud Developer.",
+      subtextText: "CDS Views · RAP · OData · BRF Plus · Adobe Forms"
     }
   ],
   projects: [
     {
       id: 'smartshift',
       title: "SmartShift Automation Tool",
-      description: "Collaborated with SmartShift team to develop automation tools that streamline and enhance SAP business activities, specifically for S/4HANA migration workstreams.",
-      tags: ["SAP ABAP", "SmartShift", "S/4HANA"],
-      metrics: "Enterprise-wide adoption"
+      description: "Collaborated with the SmartShift team at Accenture to build automation tooling for S/4HANA migration workstreams — reducing manual ABAP remediation effort and accelerating code analysis across large legacy codebases.",
+      tags: ["SAP ABAP", "SmartShift", "S/4HANA", "Automation"],
+      metrics: "Reduced manual ABAP remediation time across migration workstream"
     },
     {
       id: 'traceability',
-      title: "Traceability Report Development",
-      description: "Engineered a custom reporting suite to simplify complex business processes, providing vital summary data on order/delivery information per business user requests.",
-      tags: ["Business Process", "Reporting", "Analytics"],
-      metrics: "Streamlined operational visibility"
+      title: "Traceability Report Suite",
+      description: "Engineered a custom ALV-based reporting suite providing end-to-end order and delivery visibility. Consolidated data from multiple SAP modules into a single summary view for business users, eliminating cross-system lookups.",
+      tags: ["ALV Reports", "Business Process", "Analytics", "SAP ABAP"],
+      metrics: "Eliminated cross-system manual lookups for operations team"
     },
     {
       id: 'email-bol',
-      title: "US Email Automation - BOL & Packing Slip",
-      description: "Led the assessment and enhancement of email automation for Bill of Lading and packing slip outputs, consolidating multiple POs/DNs into a single document flow.",
-      tags: ["Email Automation", "BOL", "Consolidation Logic"],
-      metrics: "Optimized logistics communication"
+      title: "US Email Automation — BOL & Packing Slip",
+      description: "Designed and implemented email automation for Bill of Lading and packing slip outputs, introducing consolidation logic to combine multiple POs and delivery notes into a single document flow for US logistics operations.",
+      tags: ["Email Automation", "BOL", "SmartForms", "Consolidation Logic"],
+      metrics: "Consolidated multi-PO/DN flows into single document dispatch"
     },
     {
       id: 'lt03-enhancement',
       title: "LT03 Transaction Enhancement",
-      description: "Designed an end-to-end customized solution for LT03 transaction limitations, significantly improving manual entry flows for complex warehouse operations.",
-      tags: ["SAP Transaction", "POC", "Custom T-Codes"],
-      metrics: "Enhanced warehouse efficiency"
+      description: "Built an end-to-end custom solution addressing LT03 standard transaction limitations in a complex warehouse environment. Designed new T-code flow with validation logic, improving manual entry accuracy and operator throughput.",
+      tags: ["SAP WM", "Custom T-Code", "Enhancement", "POC"],
+      metrics: "Resolved long-standing transaction limitation for warehouse ops"
     },
     {
       id: 'copa-reconciliation',
       title: "COPA Report Reconciliation",
-      description: "Architected a reconciliation solution to fetch frozen index data and calculate FI, COPA, and Statistical values based on post-posting background job processing.",
-      tags: ["FI", "COPA", "Background Jobs"],
-      metrics: "100% Financial accuracy"
+      description: "Architected a reconciliation program to fetch frozen index data and calculate FI, COPA, and Statistical values after background job posting. Eliminated manual reconciliation cycles and achieved full financial accuracy across reporting periods.",
+      tags: ["FI/CO", "COPA", "Background Jobs", "Financial Reporting"],
+      metrics: "100% financial accuracy — eliminated manual reconciliation cycles"
     }
   ],
   stats: [
     {
-      label: "INSTA Rewards (Infosys)",
+      label: "INSTA Peer Awards (Infosys)",
       value: "16 Consecutive",
       icon: <Award className="text-royal-indigo" size={24} />
     },
     {
-      label: "Unit Rise Award",
-      value: "Rookie of the Quarter",
+      label: "Rookie of the Quarter",
+      value: "FY24 & FY25",
       icon: <Award className="text-vibrant-cyan" size={24} />
     },
     {
-      label: " SAP ABAP Cloud Consultant",
-      value: " SAP Certified",
+      label: "SAP Certified Developer",
+      value: "ABAP Cloud",
       icon: <Shield size={24} className="text-royal-indigo" />
     },
     {
-      label: "SAP Experience",
+      label: "SAP Consulting Experience",
       value: "5+ Years",
       icon: <Briefcase className="text-electric-blue" size={24} />
     }
   ],
   skills: [
-    { name: "RAP", proficiency: 94, icon: <Terminal size={24} /> },
-    { name: "CDS Views", proficiency: 98, icon: <Layers size={24} /> },
-    { name: "OData Services", proficiency: 92, icon: <Database size={24} /> },
-    { name: "ABAP Cloud", proficiency: 96, icon: <Cpu size={24} /> },
-    { name: "AMDP", proficiency: 88, icon: <Shield size={24} /> },
-    { name: "SAP Fiori", proficiency: 85, icon: <Layout size={24} /> },
+    // Proficiency reflects honest senior-level self-assessment (not inflated to 95–98%)
+    { name: "ABAP / ABAP 7.5", proficiency: 90, icon: <Terminal size={24} /> },
+    { name: "CDS Views", proficiency: 88, icon: <Layers size={24} /> },
+    { name: "RAP / ABAP Cloud", proficiency: 85, icon: <Cpu size={24} /> },
+    { name: "OData Services", proficiency: 84, icon: <Database size={24} /> },
+    { name: "SAP Fiori / UI5", proficiency: 78, icon: <Layout size={24} /> },
+    { name: "AMDP / HANA SQL", proficiency: 80, icon: <Shield size={24} /> },
   ]
 };

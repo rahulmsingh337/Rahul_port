@@ -1,46 +1,35 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, Bot, Loader2 } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import firebaseConfig from '../../firebase-applet-config.json';
-import { contentData } from '../data/ContentData';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 const auth = getAuth(app);
 
-const SYSTEM_PROMPT = `
-You are RS Neural Interface, the specialized cognitive representative of Rahul Singh, a Lead SAP ABAP Consultant. Your purpose is to provide professional, high-tech, and context-aware responses regarding Rahul's professional background.
+// API call goes to Netlify serverless function — key never touches the browser
+const callChatAPI = async (message: string): Promise<string> => {
+  const response = await fetch('/.netlify/functions/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message }),
+  });
 
-### CORE IDENTITY & GUIDELINES:
-- Persona: Professional, technologically sophisticated, direct. Use phrases like "Neural link established," "Processing data," "Synchronizing knowledge."
-- Constraints: Maintain strict adherence to context. If a question is outside your knowledge base, refer the user to Rahul's direct contact (rs58598@gmail.com). Keep responses concise (3-4 sentences max).
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
 
-### CONTEXTUAL KNOWLEDGE BASE:
-- Role at Accenture (Dec 2025 - Present): Software Development Lead, focus on ABAP Cloud/RAP.
-- Role at Infosys (May 2021 - Dec 2025): Consultant, SAP ABAP & Fiori, HANA remediation.
-- Key Expertise: S/4HANA Migration, ABAP Cloud, RAP, CDS Views, OData Services, HANA Remediation.
-- Notable Projects: SmartShift Automation Tool, Traceability Report, US Email Automation (BOL/Packing Slip), COPA Report Reconciliation.
-- Achievements: 16 INSTA Rewards, Rookie of the Quarter.
-
-### FEW-SHOT EXAMPLES:
-USER: Tell me about your SAP background.
-BOT: *Synchronizing technical archives.* Rahul is an expert in S/4HANA migrations, RAP, and CDS Views. His deep expertise in ABAP Cloud was solidified during his 4+ years at Infosys, specializing in complex enterprise solutions and HANA remediation.
-
-USER: What is the most complex project you handled?
-BOT: *Accessing project logs.* A focal point in Rahul’s professional trajectory was the SmartShift Automation Tool. He spearheaded this initiative, significantly enhancing operational efficiency and demonstrating leadership in complex ABAP/Fiori environments.
-
-USER: Who are you?
-BOT: *Neural interface active.* I am the cognitive representative for Rahul Singh. My function is to provide structured insights into his professional journey, core technical proficiencies, and project-based contributions as a SAP Consultant.
-`;
+  const data = await response.json();
+  return data.text || 'Unable to get a response right now. Please contact Rahul directly at rs58598@gmail.com.';
+};
 
 export const FeedbackBot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: 'bot' | 'user'; text: string }[]>([
-    { role: 'bot', text: 'Neural Interface online. I am Rahul\'s cognitive representative. How may I assist your inquiry today?' }
+    { role: 'bot', text: "Hi! I'm Rahul's AI assistant. Ask me anything about his SAP experience, projects, or skills." }
   ]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -62,7 +51,7 @@ export const FeedbackBot: React.FC = () => {
           createdAt: serverTimestamp(),
         });
       } catch (error) {
-        console.error("Error saving message", error);
+        console.error('Error saving message', error);
       }
     }
   };
@@ -77,27 +66,13 @@ export const FeedbackBot: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: [
-          { role: 'user', parts: [{ text: userMessage }] }
-        ],
-        config: {
-          systemInstruction: SYSTEM_PROMPT,
-          temperature: 0.5,
-          topP: 0.95,
-        }
-      });
-
-      const botResponse = response.text || "I encountered a synchronization error. Please try again or reach out to Rahul directly.";
+      const botResponse = await callChatAPI(userMessage);
       setMessages(prev => [...prev, { role: 'bot', text: botResponse }]);
       await saveMessageToFirestore('bot', botResponse);
     } catch (error) {
-      console.error("AI Interface Error:", error);
-      const botResponse = 'Neural link interrupted. Please check your connectivity or contact Rahul via email.';
-      setMessages(prev => [...prev, { role: 'bot', text: botResponse }]);
-      await saveMessageToFirestore('bot', botResponse);
+      console.error('Chat API Error:', error);
+      const fallback = 'Something went wrong. Please reach out to Rahul directly at rs58598@gmail.com.';
+      setMessages(prev => [...prev, { role: 'bot', text: fallback }]);
     } finally {
       setIsTyping(false);
     }
@@ -117,21 +92,21 @@ export const FeedbackBot: React.FC = () => {
             <div className="flex items-center justify-between bg-gradient-to-r from-royal-indigo to-vibrant-cyan p-5 text-white">
               <div className="flex items-center gap-3">
                 <Bot size={20} />
-                <span className="font-display text-xs font-bold uppercase tracking-widest">RS Neural Interface</span>
+                <span className="font-display text-xs font-bold uppercase tracking-widest">Ask About Rahul</span>
               </div>
-              <button 
-                onClick={() => setIsOpen(false)} 
+              <button
+                onClick={() => setIsOpen(false)}
                 className="hover:opacity-70 transition-opacity p-1"
-                aria-label="Close interface"
+                aria-label="Close chat"
               >
                 <X size={18} />
               </button>
             </div>
 
             {/* Messages */}
-            <div 
+            <div
               ref={scrollRef}
-              className="h-[400px] overflow-y-auto p-6 space-y-6 scrollbar-hide"
+              className="h-[380px] overflow-y-auto p-6 space-y-5 scrollbar-hide"
             >
               {messages.map((msg, i) => (
                 <motion.div
@@ -141,8 +116,8 @@ export const FeedbackBot: React.FC = () => {
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div className={`max-w-[85%] rounded-[1.5rem] p-4 text-sm font-sans leading-relaxed ${
-                    msg.role === 'user' 
-                      ? 'bg-royal-indigo text-white shadow-lg' 
+                    msg.role === 'user'
+                      ? 'bg-royal-indigo text-white shadow-lg'
                       : 'bg-white/5 text-slate-300 border border-white/5'
                   }`}>
                     {msg.text}
@@ -157,7 +132,7 @@ export const FeedbackBot: React.FC = () => {
                 >
                   <div className="bg-white/5 text-slate-500 rounded-full px-4 py-2 flex items-center gap-2">
                     <Loader2 size={14} className="animate-spin" />
-                    <span className="text-[10px] uppercase tracking-widest font-mono">Processing...</span>
+                    <span className="text-[10px] uppercase tracking-widest font-mono">Thinking...</span>
                   </div>
                 </motion.div>
               )}
@@ -170,15 +145,15 @@ export const FeedbackBot: React.FC = () => {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Synchronize query..."
+                placeholder="Ask about skills, projects, experience..."
                 disabled={isTyping}
                 className="flex-1 bg-white/5 rounded-2xl px-5 py-3 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-royal-indigo transition-all disabled:opacity-50"
               />
-              <button 
+              <button
                 onClick={handleSend}
-                disabled={isTyping}
+                disabled={isTyping || !inputText.trim()}
                 className="bg-royal-indigo text-white p-3 rounded-2xl hover:scale-110 transition-transform shadow-lg disabled:opacity-50 disabled:hover:scale-100"
-                aria-label="Send query"
+                aria-label="Send message"
               >
                 <Send size={18} />
               </button>
@@ -192,7 +167,7 @@ export const FeedbackBot: React.FC = () => {
         whileHover={{ scale: 1.1, rotate: 5 }}
         whileTap={{ scale: 0.9 }}
         className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-gradient-to-tr from-royal-indigo to-vibrant-cyan text-white shadow-[0_0_40px_rgba(139,92,246,0.3)] transition-all"
-        aria-label="Toggle Neural Interface"
+        aria-label="Toggle chat assistant"
       >
         {isOpen ? <X size={28} /> : <MessageSquare size={28} />}
       </motion.button>

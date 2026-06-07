@@ -9,15 +9,15 @@ const ScrollSection: React.FC<{
   index: number; // 1 or 2
   scrollYProgress: MotionValue<number>;
 }> = ({ section, index, scrollYProgress }) => {
-  const start = index * 0.33;
-  const end = (index + 1) * 0.33;
+  const start = index * 0.4;
+  const end = (index + 1) * 0.4;
 
   const opacity = useTransform(
     scrollYProgress,
     [start, start + 0.05, end - 0.05, end],
     [0, 1, 1, 0]
   );
-  const y = useTransform(scrollYProgress, [start, end], [60, -60]);
+  const y = useTransform(scrollYProgress, [start, end], [40, -40]);
   const subtextColor = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
@@ -46,7 +46,7 @@ const ScrollSection: React.FC<{
 
 /* ─── Section 0: static hero with banner ─── */
 const HeroInitial: React.FC<{ scrollYProgress: MotionValue<number> }> = ({ scrollYProgress }) => {
-  const opacity = useTransform(scrollYProgress, [0, 0.28, 0.33], [1, 1, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.35, 0.4], [1, 1, 0]);
   const subtextColor = useTransform(scrollYProgress, [0, 0.5, 1], ['#8B5CF6', '#D8B4FE', '#22D3EE']);
 
   return (
@@ -63,7 +63,7 @@ const HeroInitial: React.FC<{ scrollYProgress: MotionValue<number> }> = ({ scrol
       >
         RAHUL SINGH
         <span className="block text-base md:text-xl font-normal tracking-widest text-slate-400 mt-1">
-          Engineering the Intelligent Enterprise
+          SAP ABAP Lead · S/4HANA & ABAP Cloud
         </span>
       </motion.h1>
 
@@ -75,7 +75,7 @@ const HeroInitial: React.FC<{ scrollYProgress: MotionValue<number> }> = ({ scrol
         style={{ color: subtextColor }}
         className="mt-3 font-mono text-[10px] md:text-xs uppercase tracking-[0.3em] font-medium text-center"
       >
-        SAP ABAP Lead · S/4HANA Migration · HANA Remediation
+        Accenture · Noida · Open to SAP ABAP Lead / BTP Consultant Roles
       </motion.p>
 
       {/* Banner — centrepiece */}
@@ -88,7 +88,7 @@ const HeroInitial: React.FC<{ scrollYProgress: MotionValue<number> }> = ({ scrol
         <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-royal-indigo/50 via-vibrant-cyan/20 to-royal-indigo/50 blur-lg opacity-60" />
         <img
           src="/github-banner.png"
-          alt="Rahul Singh — SAP ABAP Lead"
+          alt="Rahul Singh — SAP ABAP Lead Consultant"
           className="relative w-full rounded-2xl border border-white/10 shadow-[0_0_60px_rgba(99,102,241,0.2)]"
         />
       </motion.div>
@@ -101,17 +101,18 @@ const HeroInitial: React.FC<{ scrollYProgress: MotionValue<number> }> = ({ scrol
         className="mt-5 flex items-center gap-8"
       >
         {[
-          { href: 'https://www.linkedin.com/in/rahul-singh-sap-abap/', icon: <Linkedin size={20} /> },
-          { href: 'https://github.com/rahulmsingh337/', icon: <Globe size={20} /> },
-          { href: 'https://www.instagram.com/squatile3375/', icon: <Instagram size={20} /> },
-          { href: 'mailto:rs58598@gmail.com', icon: <Mail size={20} /> },
-          { href: 'https://wa.me/918989805836', icon: <Phone size={20} /> },
-        ].map(({ href, icon }) => (
+          { href: 'https://www.linkedin.com/in/rahul-singh-sap-abap/', icon: <Linkedin size={20} />, label: 'LinkedIn' },
+          { href: 'https://github.com/rahulmsingh337/', icon: <Globe size={20} />, label: 'GitHub' },
+          { href: 'https://www.instagram.com/squatile3375/', icon: <Instagram size={20} />, label: 'Instagram' },
+          { href: 'mailto:rs58598@gmail.com', icon: <Mail size={20} />, label: 'Email' },
+          { href: 'https://wa.me/918989805836', icon: <Phone size={20} />, label: 'WhatsApp' },
+        ].map(({ href, icon, label }) => (
           <motion.a
             key={href}
             href={href}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={label}
             whileHover={{ y: -4, color: 'var(--color-royal-indigo)' }}
             whileTap={{ scale: 0.9 }}
             className="text-slate-500 transition-colors"
@@ -144,14 +145,14 @@ const HeroInitial: React.FC<{ scrollYProgress: MotionValue<number> }> = ({ scrol
           className="flex items-center gap-2 rounded-full border border-royal-indigo/40 bg-royal-indigo/10 px-6 py-2 font-mono text-[10px] uppercase tracking-widest text-white transition-all hover:bg-royal-indigo/20"
         >
           <Download size={13} />
-          Obtain Resume
+          Download Resume
         </motion.a>
       </motion.div>
     </motion.div>
   );
 };
 
-/* ─── Main Hero ─── */
+/* ─── Main Hero — compressed from 300vh to 200vh ─── */
 export const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -160,7 +161,7 @@ export const Hero: React.FC = () => {
   });
 
   return (
-    <section ref={containerRef} className="relative h-[300vh] w-full">
+    <section ref={containerRef} className="relative h-[200vh] w-full">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         {/* Section 0 */}
         <HeroInitial scrollYProgress={scrollYProgress} />
